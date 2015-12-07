@@ -18,6 +18,7 @@ color colorMouseInteraction = color(255, 204, 0);
 int shootTimer = 0;
 int waitShootTimer = 5000;
 Boolean ready2Shoot;
+Boolean bmousePressed = false;
 
 void setup() {
   size(192, 157);
@@ -32,23 +33,24 @@ void draw() {
   background(245);
   fill(127);
 
+  if (bmousePressed) {
+    //for (int i = balls.size()-1; i >= 0; i--) {
+    for (int i = 0; i <  balls.size(); i++) {
+      Ball ball1 = balls.get(i);
+      if (ball1.destroyed == true) {
+        Boolean bSmaller = checkSmaller(ball1.mass*0.5);
+        if (!bSmaller) {
 
-  //for (int i = balls.size()-1; i >= 0; i--) {
-   for (int i = 0; i <  balls.size(); i++) {
-    Ball ball1 = balls.get(i);
-    if (ball1.destroyed == true) {
-      Boolean bSmaller = checkSmaller(ball1.mass*0.5);
-      if (!bSmaller) {
-        
-        Ball Ball2Left = new Ball(ball1.mass, ball1.location, -1);//Constructor con parametros
-        Ball Ball2Right = new Ball(ball1.mass, ball1.location, +1);//Creando Bolas con Parametros específicos de la bola anterior que ibamos a eliminar
+          Ball Ball2Left = new Ball(ball1.mass, ball1.location, -1);//Constructor con parametros
+          Ball Ball2Right = new Ball(ball1.mass, ball1.location, +1);//Creando Bolas con Parametros específicos de la bola anterior que ibamos a eliminar
 
-        balls.add(Ball2Right);  // adding element with specific mass and dimensions
-        balls.add(Ball2Left);  // adding element with specific mass and dimensions 
+          balls.add(Ball2Right);  // adding element with specific mass and dimensions
+          balls.add(Ball2Left);  // adding element with specific mass and dimensions
+        }
+
+        // Items can be deleted with remove().
+        balls.remove(i);
       }
-      
-      // Items can be deleted with remove().
-      balls.remove(i);
     }
   }
 
@@ -56,9 +58,9 @@ void draw() {
     b.update();
     b.edges();
     b.display();
-    b.collisions();
+    if(bmousePressed)b.collisions();
   }
-  
+
   //Paint Mouse Interaction
   stroke(colorMouseInteraction);
   line(mouseX, height, mouseX, mouseY);
@@ -68,6 +70,15 @@ void draw() {
 void keyPressed() {
 }
 
+//////////////////////////////
+void mousePressed() {
+  bmousePressed = true;
+}
+
+//////////////////////////////
+void mouseReleased() {
+  bmousePressed = false;
+}
 
 ////////////////////////////////////////////////
 Boolean checkSmaller(float _newDim) {

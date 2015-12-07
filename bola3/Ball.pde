@@ -6,9 +6,8 @@ class Ball {
   float diam;
   float radius;
   float mass;
-
-  int myMillis = millis();
-  int myInitMillis = millis();
+  
+    Boolean b2Small = false;
 
   Boolean bUpLevel = false;
   int counterLevel = 0;
@@ -17,11 +16,26 @@ class Ball {
 
   color colorStrokeBall = color(104, 104, 134);
   color colorFillBall = color(104, 164, 104);
+ 
+  //
+  Boolean setDimensions(float _newDim) {
+    
+    b2Small = false;
 
-  Ball() {
-    mass = random(0.2, 3.5);//Exmple for 5
+    mass = _newDim;//Exmple for 5
     diam = mass*10;//50
     radius = diam/2;//25
+
+    if (radius < minRadius) {
+      b2Small = true;
+    }
+
+    return b2Small;
+  }
+  
+  //Contructor
+  Ball() {
+    b2Small = setDimensions(random(minSizeBall, 2.5));//If its too small will not be created and added to the ArrayList
     location = new PVector(random(width), random(10, 100));
     velocity = new PVector(random(2, 4), 1); // Direccion Inicial de las bolas
     acceleration = new PVector(0, accDificulty); // Vector Direccion de la aceleración
@@ -49,7 +63,7 @@ class Ball {
       location = lastLocation;
 
       //T=D Crear que solo sean algunas grandes y algunas pequeñas, el resto valores medios (la mayoria )
-      velocity = new PVector(direction*4, -1); // Dir X -2 ( derecha ) o 2 ( izquierda, DIR Y -1 ( abajo )
+      velocity = new PVector(direction*2, 1); // Dir X -2 ( derecha ) o 2 ( izquierda, DIR Y -1 ( abajo )
 
       //Init acc to down vector
       acceleration = new PVector(0, accDificulty); // Vector Direccion de la acceleracion
@@ -90,9 +104,10 @@ class Ball {
   }
 
   void collisions() {
-    if (dist(location.x, location.y, mouseX, mouseY)< radius) {
+    float myDistCollision = dist(location.x, 0, mouseX, 0);
+    if (myDistCollision< radius) {
       destroyed = true;
-      println("colisiona");
+      println("colisiona myDistCollision="+str(myDistCollision));
     }
   }
 
@@ -130,20 +145,5 @@ class Ball {
     stroke(colorStrokeBall);
     fill(colorFillBall);
     ellipse(location.x, location.y, mass*10, mass*10);
-  }
-
-  ////////////////////////////////////////////////
-  Boolean setDimensions(float _newDim) {
-    Boolean b2Small = false;
-
-    mass = _newDim;//Exmple for 5
-    diam = mass*10;//50
-    radius = diam/2;//25
-
-    if (radius < minRadius) {
-      b2Small = true;
-    }
-
-    return b2Small;
   }
 }
