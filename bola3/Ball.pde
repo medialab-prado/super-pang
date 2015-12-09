@@ -2,12 +2,13 @@ class Ball {
   PVector location;
   PVector velocity;
   PVector acceleration;
+  PVector InitAcceleration;
 
   float diam;
   float radius;
   float mass;
-  
-    Boolean b2Small = false;
+
+  Boolean b2Small = false;
 
   Boolean bUpLevel = false;
   int counterLevel = 0;
@@ -16,10 +17,14 @@ class Ball {
 
   color colorStrokeBall = color(104, 104, 134);
   color colorFillBall = color(104, 164, 104);
- 
-  //
+
+  int myInitMillis = millis();
+  int timeSpendInitAcc = 200;
+
+
+  ///////////////////////////////
   Boolean setDimensions(float _newDim) {
-    
+
     b2Small = false;
 
     mass = _newDim;//Exmple for 5
@@ -32,7 +37,7 @@ class Ball {
 
     return b2Small;
   }
-  
+
   //Contructor
   Ball() {
     b2Small = setDimensions(random(minSizeBall, 2.5));//If its too small will not be created and added to the ArrayList
@@ -52,7 +57,7 @@ class Ball {
      */
   }
 
-  Ball(float lastSize, PVector lastLocation, int direction) {
+  Ball(float lastSize, PVector lastLocation, PVector lastVelocity, PVector lastAcc, int direction) {
     //Physic properties
     Boolean isSmaller = setDimensions(lastSize*0.5);
 
@@ -63,11 +68,18 @@ class Ball {
       location = lastLocation;
 
       //T=D Crear que solo sean algunas grandes y algunas pequeñas, el resto valores medios (la mayoria )
-      velocity = new PVector(direction*2, 1); // Dir X -2 ( derecha ) o 2 ( izquierda, DIR Y -1 ( abajo )
-
+      velocity = new PVector(lastVelocity.x, lastVelocity.y);
+      velocity.x = lastVelocity.x * -1 * direction;
+      //velocity.y = lastVelocity.y;
+      //velocity.x *= -1;
+      //velocity = new PVector(direction*1, 1); // Dir X -2 ( derecha ) o 2 ( izquierda, DIR Y -1 ( abajo )
+      
+      
       //Init acc to down vector
-      acceleration = new PVector(0, accDificulty); // Vector Direccion de la acceleracion
-      acceleration.mult(0);
+      //acceleration = new PVector(0, accDificulty); // Vector Direccion de la acceleracion
+      acceleration = new PVector(lastAcc.x, lastAcc.y);
+
+      myInitMillis = millis();
     }
   }
 
@@ -75,37 +87,25 @@ class Ball {
     //Set the acceleration in the right direction force
     //First apply the mass
     gravityForce.div(1);//mass = 1
-    acceleration.add(gravityForce);
+
     // acceleration = new PVector(0,accDificulty);
 
+    if (millis() - myInitMillis > timeSpendInitAcc) {
+      acceleration.add(gravityForce);
+    } else {
+      acceleration.add(initGravityForce);
+    }
+
     velocity.add(acceleration);
+
     location.add(velocity);
 
-    /*?? Playing with Levels    
-     if(millis() - myInitMillis > 3000){
-     if(bUpLevel == false){
-     accDificulty = accDificulty*2;
-     acceleration = new PVector(0, accDificulty);
-     
-     bUpLevel = true; 
-     myInitMillis = millis();
-     
-     println("Level Up", bUpLevel);
-     counterLevel++;
-     }
-     }
-     else{
-     bUpLevel = false;
-     }
-     
-     Reset the acceleration in case another one appplied other forces.
-     */
     acceleration.mult(0);
   }
 
   void collisions() {
     float myDistCollision = dist(location.x, 0, mouseX, 0);
-    if (myDistCollision< radius) {
+    if (myDistCollision< radius && bBallsReadyCollision) {
       destroyed = true;
       println("colisiona myDistCollision="+str(myDistCollision));
     }

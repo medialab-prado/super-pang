@@ -5,26 +5,33 @@ int alto = 157;
 //Vars for Balls
 ArrayList<Ball> balls;
 float accDificulty = 0.2; // en 0.3 disminuye, con el resto sigue igual, no disminuye
-PVector deltaXVel =  new PVector(1, 0);
+PVector deltaXVel =  new PVector(3, 0);
 PVector deltaYVel =  new PVector(0, 1);
 PVector gravityForce = new PVector(0, accDificulty);
-int initialBalls = 5;
+
+PVector initGravityForce = new PVector(0, -accDificulty);
+
+int initialBalls = 1;
 float minSizeBall = 3;
-float minRadius = 4;
+float minRadius = 3;
 
 
 //Vars for Interaction
+
+//Balls var interaction
+int lastShootedTime = millis();
+int waitTimeBeforeShoot = 1000;
+Boolean bBallsReadyCollision = false;
+
+//Mouse Interactio
 color colorMouseInteraction = color(255, 204, 0);
-int shootTimer = 0;
-int waitShootTimer = 5000;
-Boolean ready2Shoot;
 Boolean bmousePressed = false;
 
 void setup() {
   size(192, 157);
 
   balls = new ArrayList<Ball>();  // Create an empty ArrayList
-  for (int initialBalls = 0; initialBalls < 6; initialBalls++) {
+  for (int i = 0; i < initialBalls; i++) {
     balls.add(new Ball());
   }
 }
@@ -32,23 +39,27 @@ void setup() {
 void draw() {
   background(245);
   fill(127);
-
+   //Calc once if Balls can be collided. This is used inside Ball class
+   bBallsReadyCollision = isBallsReady2Collision();
+    
   if (bmousePressed) {
     //for (int i = balls.size()-1; i >= 0; i--) {
     for (int i = 0; i <  balls.size(); i++) {
       Ball ball1 = balls.get(i);
       if (ball1.destroyed == true) {
-        Boolean bSmaller = checkSmaller(ball1.mass*0.5);
+        Boolean bSmaller = checkSmaller(ball1.mass*0.3);
         if (!bSmaller) {
+                                    //ball1.location.add(deltaXVel)
+          Ball Ball2Left = new Ball(ball1.mass, ball1.location, ball1.velocity, ball1.acceleration, -1);//Constructor con parametros
+                                    //ball1.location.sub(deltaXVel)
+          Ball Ball2Right = new Ball(ball1.mass, ball1.location, ball1.velocity, ball1.acceleration, +1);//Creando Bolas con Parametros específicos de la bola anterior que ibamos a eliminar
 
-          Ball Ball2Left = new Ball(ball1.mass, ball1.location, -1);//Constructor con parametros
-          Ball Ball2Right = new Ball(ball1.mass, ball1.location, +1);//Creando Bolas con Parametros específicos de la bola anterior que ibamos a eliminar
-
-          balls.add(Ball2Right);  // adding element with specific mass and dimensions
           balls.add(Ball2Left);  // adding element with specific mass and dimensions
+          balls.add(Ball2Right);  // adding element with specific mass and dimensions
         }
 
-        // Items can be deleted with remove().
+        //Remove it and save when was that last ball removed
+        lastShootedTime = millis();
         balls.remove(i);
       }
     }
@@ -78,6 +89,17 @@ void mousePressed() {
 //////////////////////////////
 void mouseReleased() {
   bmousePressed = false;
+}
+
+////////////////////////////////////////////////
+Boolean isBallsReady2Collision(){
+  Boolean readyBalls = false;
+  
+  if( (millis() - lastShootedTime) > waitTimeBeforeShoot){
+    readyBalls = true;
+  }
+  
+  return readyBalls;
 }
 
 ////////////////////////////////////////////////
