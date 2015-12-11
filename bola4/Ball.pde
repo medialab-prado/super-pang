@@ -44,6 +44,8 @@ class Ball {
     location = new PVector(random(width), random(10, 100));
     velocity = new PVector(random(2, 4), 1); // Direccion Inicial de las bolas
     acceleration = new PVector(0, accDificulty); // Vector Direccion de la aceleración
+    InitAcceleration =  new PVector(initCollisionGravityForce.x, initCollisionGravityForce.y);
+    
     /*TODO
      Para hacer que bolas tengas diferentes direcciones crear diferentes clases de bolas.
      Cada clase que tenga un comportamiento diferente.
@@ -57,9 +59,11 @@ class Ball {
      */
   }
 
-  Ball(float lastSize, PVector lastLocation, PVector lastVelocity, PVector lastAcc, int direction, Boolean Left) {
+  Ball(float lastSize, PVector lastLocation, PVector lastVelocity, PVector lastAcc, int direction) {
     //Physic properties
     Boolean isSmaller = setDimensions(lastSize*0.5);
+    
+    InitAcceleration =  new PVector(lastAcc.x, lastAcc.y);
 
     if (isSmaller) {
       println("ERROR This should not be tried: Smaller please dont create a ball");
@@ -70,10 +74,6 @@ class Ball {
       //T=D Crear que solo sean algunas grandes y algunas pequeñas, el resto valores medios (la mayoria )
       velocity = new PVector(lastVelocity.x,lastVelocity.y);
       velocity.mult(0);
-      if(direction < 0 && Left == false)velocity.x *= -1;
-      else if(direction < 0 && Left == true)velocity.x *= +1;
-      else if(direction > 0 && Left == false)velocity.x *= +1;
-      else if(direction > 0 && Left == true)velocity.x *= -1;
       
       //Init acc to down vector
       acceleration = new PVector(0, accDificulty); // Vector Direccion de la acceleracion
@@ -93,7 +93,7 @@ class Ball {
     if (millis() - myInitMillis > timeSpendInitAcc) {
       acceleration.add(gravityForce);
     } else {
-      acceleration.add(initCollisionGravityForce);
+      acceleration.add(InitAcceleration);
     }
 
     velocity.add(acceleration);

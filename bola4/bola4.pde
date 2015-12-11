@@ -10,10 +10,10 @@ PVector deltaYVel =  new PVector(0, 1);
 PVector gravityForce = new PVector(0, accDificulty);
 
 PVector initGravityForce = new PVector(0, -accDificulty);
-PVector initCollisionGravityForce = new PVector(accDificulty, accDificulty);
+PVector initCollisionGravityForce = new PVector(accDificulty, -accDificulty);
 
 int initialBalls = 1;
-float minSizeBall = 3;
+float minSizeBall = 5;
 float minRadius = 3;
 
 
@@ -51,13 +51,19 @@ void draw() {
         Boolean bSmaller = checkSmaller(ball1.mass*0.3);
         if (!bSmaller) {
           
-          //ball1.location.add(deltaXVel)
-          Ball Ball2Left = new Ball(ball1.mass, ball1.location, ball1.velocity, ball1.acceleration, -1, true);//Go Left
-                                    //ball1.location.sub(deltaXVel)
-          Ball Ball2Right = new Ball(ball1.mass, ball1.location, ball1.velocity, ball1.acceleration, +1, false);//Go Right
-
+          //Bola Contraria 
+          if(ball1.velocity.x > 0)ball1.acceleration.x = initCollisionGravityForce.x * -1;
+          else ball1.acceleration.x = initCollisionGravityForce.x*+1;
+          ball1.acceleration.y = initCollisionGravityForce.y;
+          Ball Ball2Left = new Ball(ball1.mass, ball1.location, ball1.velocity, ball1.acceleration, -1);//Go Left
           balls.add(Ball2Left);  // adding element with specific mass and dimensions
-          balls.add(Ball2Right);  // adding element with specific mass and dimensions
+         
+          //Bola a favor
+          //if(ball1.velocity.x > 0)ball1.acceleration.x = initCollisionGravityForce.x * +1;
+          //else ball1.acceleration.x = initCollisionGravityForce.x*+1;
+          //ball1.acceleration.y = initCollisionGravityForce.y;
+          //Ball Ball2Right = new Ball(ball1.mass, ball1.location, ball1.velocity, ball1.acceleration, +1);//Go Left
+          //balls.add(Ball2Right);  // adding element with specific mass and dimensions
         }
 
         //Remove it and save when was that last ball removed
