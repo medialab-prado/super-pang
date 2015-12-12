@@ -6,7 +6,7 @@ Ball bola1;
 Ball bola2;
 
 void setup() {
-  size(ancho, alto);
+  size(768, 628);
   bola1 = new Ball();
   bola2 = new Ball();
 }
