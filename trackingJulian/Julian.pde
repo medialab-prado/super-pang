@@ -1,4 +1,4 @@
-Class Julian(){
+class Julian{
   int widthJulian = 20;
   int heightJulian = 15;
   int posXJulian;
