@@ -34,7 +34,7 @@ int minPlayerHeight = 10;
 
 void setup() {
   size(192, 157);
-pixelDensity(2);
+
   balls = new ArrayList<Ball>();  // Create an empty ArrayList
   for (int i = 0; i < initialBalls; i++) {
     balls.add(new Ball());
