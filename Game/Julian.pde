@@ -1,37 +1,59 @@
 class Julian {
-  PVector posJulian;
-  PVector sizeJulian;
+  PVector loc;
+  PVector dim;
 
-  void update() {
-    posJulian = new PVector(mouseX, mouseY - 5);
-    sizeJulian = new PVector(10, height - mouseY);
+  void update(ArrayList<Ball> ballsInput) {
+    loc = new PVector(mouseX, mouseY - 5);
+    dim = new PVector(10, height - mouseY);
 
-    //calcular colision
-    //if (myDistCollision< radius && bBallsReadyCollision) {
-    //  destroyed = true;
-    //}
+
+
+
+    //update character dimensions
+    if (height - mouseY <= maxPlayerHeight && height - mouseY >= minPlayerHeight) {
+      loc.x = mouseX - 5;
+      loc.y = mouseY;
+      dim.y = height - mouseY;
+    } else if (height - mouseY >= maxPlayerHeight) {
+      loc.x = mouseX - 5;
+      loc.y = height - maxPlayerHeight;
+      dim.y = maxPlayerHeight;
+    } else {
+      loc.x = mouseX - 5;
+      loc.y = height - minPlayerHeight;
+      dim.y = minPlayerHeight;
+    }
+
+    //calcular colision con todas las bolas recibidas aqui
+    for (Ball b : ballsInput) {
+      Boolean collisionActual = false;
+      collisionActual = isCollision(b.location);
+
+      if (collisionActual == true) {
+        println("COlLISIONNNNNNN!!!!!!!");
+      }
+    }
   }
 
   void display() {
     fill(0, 255, 255);
-    // rect(posJulian.x, height - sizeJulian.x, sizeJulian.y, sizeJulian.x);
+    // rect(loc.x, height - dim.x, dim.y, dim.x);
 
     //Paint Player
-    if (height - mouseY <= maxPlayerHeight && height - mouseY >= minPlayerHeight) {
-      posJulian.x = mouseX - 5;
-      posJulian.y = mouseY;
-      sizeJulian.y = height - mouseY;
-      rect(posJulian.x, posJulian.y, sizeJulian.x, sizeJulian.y);
-    } else if (height - mouseY >= maxPlayerHeight) {
-      posJulian.x = mouseX - 5;
-      posJulian.y = height - maxPlayerHeight;
-      sizeJulian.y = maxPlayerHeight;
-      rect(posJulian.x, posJulian.y, sizeJulian.x, sizeJulian.y);
-    } else {
-      posJulian.x = mouseX - 5;
-      posJulian.y = height - minPlayerHeight;
-      sizeJulian.y = minPlayerHeight;
-      rect(posJulian.x, posJulian.y, sizeJulian.x, sizeJulian.y);
+    rect(loc.x, loc.y, dim.x, dim.y);
+    fill(255, 0, 0);
+    ellipse(loc.x, loc.y, 5, 5);
+    ellipse(loc.x + dim.x, loc.y, 5, 5);
+  }
+
+  Boolean isCollision (PVector PballLoc) {
+    Boolean bCollision = false;
+    if (PballLoc.x >= loc.x && PballLoc.x <= loc.x + dim.x) {
+      if (PballLoc.y > loc.y) {
+        //algo
+        bCollision = true;
+      }
     }
+    return bCollision;
   }
 }
