@@ -1,12 +1,10 @@
 class Julian {
-  int widthJulian = 20;
-  int heightJulian = 15;
-  int posXJulian;
-  int posYJulian;
-
+  PVector posJulian;
+  PVector sizeJulian;
 
   void update() {
-    posXJulian = mouseX;
+    posJulian = new PVector(mouseX, mouseY - 5);
+    sizeJulian = new PVector(10, height - mouseY);
 
     //calcular colision
     //if (myDistCollision< radius && bBallsReadyCollision) {
@@ -16,20 +14,24 @@ class Julian {
 
   void display() {
     fill(0, 255, 255);
-    // rect(posXJulian, height - heightJulian, widthJulian, heightJulian);
+    // rect(posJulian.x, height - sizeJulian.x, sizeJulian.y, sizeJulian.x);
 
     //Paint Player
     if (height - mouseY <= maxPlayerHeight && height - mouseY >= minPlayerHeight) {
-      rect(mouseX - 5, mouseY, 10, height - mouseY);
-      posXJulian = mouseX;
+      posJulian.x = mouseX - 5;
+      posJulian.y = mouseY;
+      sizeJulian.y = height - mouseY;
+      rect(posJulian.x, posJulian.y, sizeJulian.x, sizeJulian.y);
     } else if (height - mouseY >= maxPlayerHeight) {
-      rect(mouseX - 5, height - maxPlayerHeight, 10, maxPlayerHeight);
-      posXJulian = maxPlayerHeight;
+      posJulian.x = mouseX - 5;
+      posJulian.y = height - maxPlayerHeight;
+      sizeJulian.y = maxPlayerHeight;
+      rect(posJulian.x, posJulian.y, sizeJulian.x, sizeJulian.y);
     } else {
-      rect(mouseX - 5, height - minPlayerHeight, 10, minPlayerHeight);
-      posXJulian = minPlayerHeight;
+      posJulian.x = mouseX - 5;
+      posJulian.y = height - minPlayerHeight;
+      sizeJulian.y = minPlayerHeight;
+      rect(posJulian.x, posJulian.y, sizeJulian.x, sizeJulian.y);
     }
-
-    posYJulian = mouseY - 5;
   }
 }

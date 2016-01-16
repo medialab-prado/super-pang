@@ -1,7 +1,3 @@
-int ancho = 192;
-int alto = 157;
-
-
 //Vars for Balls
 ArrayList<Ball> balls;
 float accDificulty = 0.1; // en 0.3 disminuye, con el resto sigue igual, no disminuye
@@ -48,7 +44,7 @@ void setup() {
 }
 
 void draw() {
-  background(245);
+  background(255);
   fill(127);
 
   //Calc once if Balls can be collided. This is used inside Ball class
