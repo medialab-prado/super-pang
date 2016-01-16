@@ -1,62 +1,92 @@
 class Ray {
   //Rayo interaction
-  float rayX1;
-  float rayY1;
-  float rayX2;
-  float rayY2;
+  // down
+  float ballSize;
+
+
+
+  PVector rayBottom;
+  //float rayX1;
+  //float rayY1;
+
+  // up
+  PVector rayTop;
+  //float rayX2;
+  //float rayY2;
+
+  PVector rayLocation;
   int initTimeRay;
   int rayTimeAnimation;
-  int ballSize;
-  boolean isShoot;
+
+  boolean bRayActive;
   float rayTimeDif;
   float rayTimeDifMapped;
 
   //Contructor
   Ray() {
     ballSize = 10; 
-    rayY1 = height - ballSize/2;
-    rayY2 = ballSize/2;
-    
+
+    rayBottom = new PVector(0, 0);
+    rayBottom.y = height - ballSize/2;
+
+    rayTop = new PVector(0, 0);
+    rayTop.y = ballSize/2;
+
+    rayLocation = new PVector(0, height); // Se inicia abajo de la pantalla
+
     rayTimeAnimation = 2000;
     initTimeRay = millis();
     rayTimeDif = rayTimeAnimation;
   }
 
   void update() {
-    rayX1 = mouseX;
-    rayX2 = mouseX;
-    if (isShoot == false) {
-      
-      if (mousePressed == true) {
-        isShoot = true;
-        initTimeRay = millis();
+    rayBottom.x = mouseX;
+    rayTop.x = mouseX;
+
+
+    if (mousePressed == true) {
+      bRayActive = true;
+      initTimeRay = millis();
+    }
+
+    //Start to check collisions if ray is active
+    if (bRayActive) {
+
+      if (rayTimeDifMapped == height) {
+        rayTimeDif = 0;
       }
-    }
-    
-    if (rayTimeDifMapped == height){
-      stroke(255);
-    }
 
-    rayTimeDif = millis() - initTimeRay;
+      rayTimeDif = millis() - initTimeRay;
 
-    if (rayTimeDif > 2000) {
-      isShoot = false;
-      rayTimeDif = 2000;
+      if (rayTimeDif > 2000) {
+        bRayActive = false;
+        rayTimeDif = 0;
+      }
+
+      if (millis() == 0) {
+        rayLocation.y = height -height/ballSize;
+      }
+
+      rayTimeDifMapped = map(rayTimeDif, 0, rayTimeAnimation, height, 0);
+      rayLocation.x = mouseX;
+      rayLocation.y = rayTimeDifMapped;
     }
-
-    rayTimeDifMapped = map(rayTimeDif, 0, rayTimeAnimation, height, 0);
   }
 
   void display() {
     fill(132, 82, 218);
     noStroke();
-    ellipse(rayX1, height - ballSize/2, ballSize, ballSize);
-    ellipse(rayX2, rayY2, ballSize, ballSize);
-   
-    if (isShoot == true) {
-      stroke(255, 0, 0);
-      line(rayX1, rayY1, rayX2, rayTimeDifMapped);
+
+    if (bRayActive) {
+
+      ellipse(rayLocation.x, rayLocation.y, ballSize, ballSize);
+      fill(255, 0, 0);
+      ellipse(rayBottom.x, rayBottom.y, ballSize, ballSize);
+
+      if (bRayActive == true) {
+        stroke(255, 0, 0);
+        line(rayBottom.x, rayBottom.y - ballSize/2, rayLocation.x, rayLocation.y);
+      }
     }
   }
 }
-

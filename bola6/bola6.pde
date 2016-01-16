@@ -28,11 +28,14 @@ Boolean bBallsReadyCollision = false;
 color colorMouseInteraction = color(255, 204, 0);
 Boolean bmousePressed = false;
 
-//ray vars
-Ray myRay = new Ray();
+Ray myRay;
+
 
 void setup() {
   size(192, 157);
+
+//ray vars
+ myRay = new Ray();
 
   balls = new ArrayList<Ball>();  // Create an empty ArrayList
   for (int i = 0; i < initialBalls; i++) {
