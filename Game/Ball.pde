@@ -103,11 +103,13 @@ class Ball {
     acceleration.mult(0);
   }
 
-  void collisions() {
-    float myDistCollision = dist(location.x, 0, mouseX, 0);
-    if (myDistCollision< radius && bBallsReadyCollision) {
-      destroyed = true;
-      println("colisiona myDistCollision="+str(myDistCollision));
+  void collisions(Ray myRayTemp) {
+    if (myRayTemp.bRayActive) {
+      float myDistCollision = dist(location.x, 0, myRayTemp.rayLocation.x, 0);
+      if (myDistCollision< radius && bBallsReadyCollision) {
+        destroyed = true;
+        println("colisiona myDistCollision="+str(myDistCollision));
+      }
     }
   }
 

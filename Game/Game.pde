@@ -17,20 +17,23 @@ int lastShootedTime = millis();
 int waitTimeBeforeShoot = 1000;
 Boolean bBallsReadyCollision = false;
 
-//Mouse Interaction
+////Vars for Mouse Interaction
 color colorMouseInteraction = color(255, 204, 0);
 Boolean bmousePressed = false;
 
-//ray vars
-Ray myRay = new Ray();
+//Vars for Rays
+Ray myRay;
 
-//caracter vars
+////Vars for character
 Julian miJulian;
 int maxPlayerHeight = 30;
 int minPlayerHeight = 10;
 
 void setup() {
   size(192, 157);
+
+  //ray vars
+  myRay = new Ray();
 
   balls = new ArrayList<Ball>();  // Create an empty ArrayList
   for (int i = 0; i < initialBalls; i++) {
@@ -47,7 +50,7 @@ void draw() {
   //Calc once if Balls can be collided. This is used inside Ball class
   bBallsReadyCollision = isBallsReady2Collision();
 
-  if (bmousePressed) {
+  if (myRay.bRayActive) {
     //for (int i = balls.size()-1; i >= 0; i--) {
     for (int i = 0; i <  balls.size(); i++) {
       Ball ball1 = balls.get(i);
@@ -81,7 +84,7 @@ void draw() {
     b.update();
     b.edges();
     b.display();
-    if (bmousePressed)b.collisions();
+    b.collisions(myRay);
   }
 
   myRay.display();
