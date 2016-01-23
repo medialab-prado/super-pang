@@ -58,7 +58,7 @@ void draw() {
         Boolean bSmaller = checkSmaller(ball1.mass*0.3);
         if (!bSmaller) {
 
-          //Crea una Bola en direccion Contraria 
+          //Crea una Bola en direccion Contraria
           if (ball1.velocity.x > 0)ball1.acceleration.x = initCollisionGravityForce.x * -1;
           else ball1.acceleration.x = initCollisionGravityForce.x*+1;
           ball1.acceleration.y = initCollisionGravityForce.y;
@@ -73,7 +73,7 @@ void draw() {
           //          balls.add(Ball2Right);  // adding element with specific mass and dimensions
         }
 
-        //Elimina la bola 
+        //Elimina la bola
         lastShootedTime = millis();
         balls.remove(i);
       }
