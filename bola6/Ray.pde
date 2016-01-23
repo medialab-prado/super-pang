@@ -2,22 +2,12 @@ class Ray {
   //Rayo interaction
   // down
   float ballSize;
-
-
-
   PVector rayBottom;
-  //float rayX1;
-  //float rayY1;
-
-  // up
   PVector rayTop;
-  //float rayX2;
-  //float rayY2;
-
+  
   PVector rayLocation;
   int initTimeRay;
   int rayTimeAnimation;
-
   boolean bRayActive;
   float rayTimeDif;
   float rayTimeDifMapped;

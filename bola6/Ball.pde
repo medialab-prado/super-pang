@@ -45,7 +45,7 @@ class Ball {
     velocity = new PVector(random(2, 4), 1); // Direccion Inicial de las bolas
     acceleration = new PVector(0, accDificulty); // Vector Direccion de la aceleración
     InitAcceleration =  new PVector(initCollisionGravityForce.x, initCollisionGravityForce.y);
-    
+
     /*TODO
      Para hacer que bolas tengas diferentes direcciones crear diferentes clases de bolas.
      Cada clase que tenga un comportamiento diferente.
@@ -62,7 +62,7 @@ class Ball {
   Ball(float lastSize, PVector lastLocation, PVector lastVelocity, PVector lastAcc, int direction) {
     //Physic properties
     Boolean isSmaller = setDimensions(lastSize*0.5);
-    
+
     InitAcceleration =  new PVector(lastAcc.x, lastAcc.y);
 
     if (isSmaller) {
@@ -72,9 +72,9 @@ class Ball {
       location = lastLocation;
 
       //T=D Crear que solo sean algunas grandes y algunas pequeñas, el resto valores medios (la mayoria )
-      velocity = new PVector(lastVelocity.x,lastVelocity.y);
+      velocity = new PVector(lastVelocity.x, lastVelocity.y);
       velocity.mult(0);
-      
+
       //Init acc to down vector
       acceleration = new PVector(0, accDificulty); // Vector Direccion de la acceleracion
       //acceleration = new PVector(direction, -0.1);
@@ -103,11 +103,13 @@ class Ball {
     acceleration.mult(0);
   }
 
-  void collisions() {
-    float myDistCollision = dist(location.x, 0, mouseX, 0);
-    if (myDistCollision< radius && bBallsReadyCollision) {
-      destroyed = true;
-      println("colisiona myDistCollision="+str(myDistCollision));
+  void collisions(Ray myRayTemp) {
+    if (myRayTemp.bRayActive) {
+      float myDistCollision = dist(location.x, 0, myRayTemp.rayLocation.x, 0);
+      if (myDistCollision< radius && bBallsReadyCollision) {
+        destroyed = true;
+        println("colisiona myDistCollision="+str(myDistCollision));
+      }
     }
   }
 

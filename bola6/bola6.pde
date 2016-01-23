@@ -49,7 +49,7 @@ void draw() {
    //Calc once if Balls can be collided. This is used inside Ball class
    bBallsReadyCollision = isBallsReady2Collision();
     
-  if (bmousePressed) {
+  if (myRay.bRayActive) {
     //for (int i = balls.size()-1; i >= 0; i--) {
     for (int i = 0; i <  balls.size(); i++) {
       Ball ball1 = balls.get(i);
@@ -83,7 +83,8 @@ void draw() {
     b.update();
     b.edges();
     b.display();
-    if(bmousePressed)b.collisions();
+    //if(bmousePressed)
+    b.collisions(myRay);
   }
 
 //Paint Mouse Interaction
