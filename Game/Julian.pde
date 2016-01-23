@@ -27,7 +27,7 @@ class Julian {
     //calcular colision con todas las bolas recibidas aqui
     for (Ball b : ballsInput) {
       Boolean collisionActual = false;
-      collisionActual = isCollision(b.location);
+      collisionActual = isCollidingCircleRectangle(b.location.x, b.location.y, b.radius, loc.x, loc.y, dim.x, dim.y);
 
       if (collisionActual == true) {
         println("COlLISIONNNNNNN!!!!!!!");
@@ -46,14 +46,35 @@ class Julian {
     ellipse(loc.x + dim.x, loc.y, 5, 5);
   }
 
-  Boolean isCollision (PVector PballLoc) {
-    Boolean bCollision = false;
-    if (PballLoc.x >= loc.x && PballLoc.x <= loc.x + dim.x) {
-      if (PballLoc.y > loc.y) {
-        //algo
-        bCollision = true;
-      }
+  boolean isCollidingCircleRectangle(
+    float circleX, 
+    float circleY, 
+    float radius, 
+    float rectangleX, 
+    float rectangleY, 
+    float rectangleWidth, 
+    float rectangleHeight)
+  {
+    float circleDistanceX = abs(circleX - rectangleX - rectangleWidth/2);
+    float circleDistanceY = abs(circleY - rectangleY - rectangleHeight/2);
+
+    if (circleDistanceX > (rectangleWidth/2 + radius)) { 
+      return false;
     }
-    return bCollision;
+    if (circleDistanceY > (rectangleHeight/2 + radius)) { 
+      return false;
+    }
+
+    if (circleDistanceX <= (rectangleWidth/2)) { 
+      return true;
+    } 
+    if (circleDistanceY <= (rectangleHeight/2)) { 
+      return true;
+    }
+
+    float cornerDistance_sq = pow(circleDistanceX - rectangleWidth/2, 2) +
+      pow(circleDistanceY - rectangleHeight/2, 2);
+
+    return (cornerDistance_sq <= pow(radius, 2));
   }
 }

@@ -12,9 +12,6 @@ int initialBalls = 1;
 float minSizeBall = 5;
 float minRadius = 3;
 
-//Vars for Interaction
-
-
 //Balls var interaction
 int lastShootedTime = millis();
 int waitTimeBeforeShoot = 1000;
