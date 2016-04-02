@@ -12,9 +12,9 @@
 //?
 
 //Funcion de pintar los carteles de ( has ganado , has perdido, Numero de Vidas, )
-//DisplayInfo(stateGame, numLifes)
+//DisplayInfo(stateGame, numLifes);
 
 
-//**********PENDIENTE^*********//
+//**********PENDIENTE*********//
 //Arreglar las bolas que se dividan entre 2!
 //Carles
