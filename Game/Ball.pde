@@ -103,10 +103,13 @@ class Ball {
     acceleration.mult(0);
   }
 
+
+// colisión entre rayo y pelota 
   void collisions(Ray myRayTemp) {
     if (myRayTemp.bRayActive) {
       float myDistCollision = dist(location.x, 0, myRayTemp.rayLocation.x, 0);
-      if (myDistCollision< radius && bBallsReadyCollision) {
+      if (myDistCollision< radius && myRayTemp.rayLocation.y < location.y && bBallsReadyCollision) {
+        
         destroyed = true;
         println("colisiona myDistCollision="+str(myDistCollision));
       }

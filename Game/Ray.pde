@@ -9,7 +9,7 @@ class Ray {
   int initTimeRay;
   int rayTimeAnimation;
   boolean bRayActive;
-  float rayTimeDif;
+  float rayTimeDif;//tiempo de vida del rayo
   float rayTimeDifMapped;
 
   //Contructor
@@ -29,6 +29,10 @@ class Ray {
     rayTimeDif = rayTimeAnimation;
   }
 
+  void throwRay(){
+   // setear punto de inicio
+   
+  }
   void update() {
     rayBottom.x = mouseX;
     rayTop.x = mouseX;
@@ -53,9 +57,9 @@ class Ray {
         rayTimeDif = 0;
       }
 
-      if (millis() == 0) {
+      /*if (millis() == 0) {
         rayLocation.y = height -height/ballSize;
-      }
+      }*/
 
       rayTimeDifMapped = map(rayTimeDif, 0, rayTimeAnimation, height, 0);
       rayLocation.x = mouseX;
