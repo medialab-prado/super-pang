@@ -106,8 +106,7 @@ class Ball {
 
   // colisión entre rayo y pelota
   void collisions(Ray myRayTemp) {
-    if (dist(location.x, location.y, myRayTemp.rayLocation.x, myRayTemp.rayLocation.y) < radius || (location.y > myRayTemp.rayLocation.y && dist(location.x, 0, myRayTemp.rayLocation.x, 0) < radius)) destroyed = true;
-    //println(dist(location.x, location.y, myRayTemp.rayLocation.x, myRayTemp.rayLocation.y) < radius);
+    if (dist(location.x, location.y, myRayTemp.rayLocation.x, myRayTemp.rayLocation.y) < radius || location.y > myRayTemp.rayLocation.y && dist(location.x, 0, myRayTemp.rayLocation.x, 0) < radius) destroyed = true;
   }
 
   //Detección de los bordes de la pantalla
