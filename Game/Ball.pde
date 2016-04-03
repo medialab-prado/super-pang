@@ -49,10 +49,10 @@ class Ball {
     /*TODO
      Para hacer que bolas tengas diferentes direcciones crear diferentes clases de bolas.
      Cada clase que tenga un comportamiento diferente.
-     Según el tamaño tenemos que la bola cambia de comportamiento. 
+     Según el tamaño tenemos que la bola cambia de comportamiento.
      P.e Cuando el Tamaño disminuye la bola bota hasta una altura menor
      Necesitariamos definir unas alturas fijas para que tengamos claro donde.
-     
+
      Init acc to down vector
      Hay que conseguir que la bola no se ralentice nunca.
      Si la posición de la bola llega a ser varias veces inferior al edge marcado, se ralentiza.
@@ -104,9 +104,10 @@ class Ball {
   }
 
 
-  // colisión entre rayo y pelota 
+  // colisión entre rayo y pelota
   void collisions(Ray myRayTemp) {
-    if (dist(location.x, location.y, myRayTemp.location.x, myRayTemp.location.x) < radius) destroyed = true;
+    if (dist(location.x, location.y, myRayTemp.rayLocation.x, myRayTemp.rayLocation.y) < radius || (location.y > myRayTemp.rayLocation.y && dist(location.x, 0, myRayTemp.rayLocation.x, 0) < radius)) destroyed = true;
+    //println(dist(location.x, location.y, myRayTemp.rayLocation.x, myRayTemp.rayLocation.y) < radius);
   }
 
   //Detección de los bordes de la pantalla
@@ -129,7 +130,7 @@ class Ball {
     /*if (location.y < radius) {
      velocity.y *= -1;
      location.y=radius;
-     }  
+     }
      */
     //Abajo
     if (location.y >= height-radius) {
