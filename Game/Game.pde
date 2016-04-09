@@ -59,8 +59,9 @@ void draw() {
         if (!bSmaller) {
 
           //Crea una Bola en direccion Contraria
-          if (ball1.velocity.x > 0)ball1.acceleration.x = initCollisionGravityForce.x * -1;
-          else ball1.acceleration.x = initCollisionGravityForce.x*+1;
+          //if (ball1.velocity.x > 0)ball1.acceleration.x = initCollisionGravityForce.x * -1;
+          //else 
+          ball1.acceleration.x = initCollisionGravityForce.x;
           ball1.acceleration.y = initCollisionGravityForce.y;
           Ball Ball2Left = new Ball(ball1.mass, ball1.location, ball1.velocity, ball1.acceleration, -1);//Go Left
           balls.add(Ball2Left);  // adding element with specific mass and dimensions
@@ -71,6 +72,11 @@ void draw() {
           //          ball1.acceleration.y = initCollisionGravityForce.y;
           //          Ball Ball2Right = new Ball(ball1.mass, ball1.location, ball1.velocity, ball1.acceleration, +1);//Go Left
           //          balls.add(Ball2Right);  // adding element with specific mass and dimensions
+          
+          ball1.acceleration.x = initCollisionGravityForce.x*-1;
+          ball1.acceleration.y = initCollisionGravityForce.y;
+          Ball Ball2Right = new Ball(ball1.mass, ball1.location, ball1.velocity, ball1.acceleration, -1);//Go Left
+          balls.add(Ball2Right);
         }
 
         //Elimina la bola
@@ -96,6 +102,7 @@ void draw() {
 }
 
 void keyPressed() {
+  
 }
 
 //////////////////////////////
