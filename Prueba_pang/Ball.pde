@@ -1,4 +1,6 @@
-class Ball {
+class Ball { //<>// //<>// //<>//
+
+  int id;
   PVector location;
   PVector velocity;
   PVector acceleration;
@@ -23,6 +25,9 @@ class Ball {
       b2Small = true;
     }
 
+    counterBalls++;
+    id = counterBalls;
+
     return b2Small;
   }
 
@@ -33,23 +38,28 @@ class Ball {
     velocity = new PVector(3, 1); // Direccion Inicial de las bolas
     acceleration = new PVector(0, accDificulty); // Vector Direccion de la aceleración
 
+    println("*****Contructor por DEFECTO**********");
   }
 
   Ball(float lastSize, PVector lastLocation, PVector lastVelocity, PVector lastAcc) {
 
-      println("New Ball with mass"+str(radius));
-      location = lastLocation;
+    println("New Ball with mass"+str(radius));
+    location = lastLocation.copy();
 
-      velocity = lastVelocity;
+    velocity = lastVelocity.copy();
 
-      acceleration = lastAcc;
+    acceleration = lastAcc.copy();
 
-      //myInitMillis = millis();
-      setDimensions(lastSize);
+    //myInitMillis = millis();
+    setDimensions(lastSize);
+
+    println("*****Contructor por PARAMETROS**********");
   }
 
 
   void update() {
+
+
 
     acceleration.add(gravityForce);
 
@@ -57,15 +67,25 @@ class Ball {
 
     location.add(velocity);
 
-//rest para no acumular
+    if (keyPressed == true) {
+      if (key == 'u') {
+        println("***************");
+        println("id = "+id);
+        println("velocity = "+velocity);
+        println("location = "+location);
+        println("acceleration = "+acceleration);
+      }
+    }
+
+    //rest para no acumular
     acceleration.mult(0);
   }
 
 
   // colisión entre rayo y pelota
   /*void collisions(Ray myRayTemp) {
-    if (dist(location.x, location.y, myRayTemp.rayLocation.x, myRayTemp.rayLocation.y) < radius || location.y > myRayTemp.rayLocation.y && dist(location.x, 0, myRayTemp.rayLocation.x, 0) < radius) destroyed = true;
-  }*/
+   if (dist(location.x, location.y, myRayTemp.rayLocation.x, myRayTemp.rayLocation.y) < radius || location.y > myRayTemp.rayLocation.y && dist(location.x, 0, myRayTemp.rayLocation.x, 0) < radius) destroyed = true;
+   }*/
 
   //Detección de los bordes de la pantalla
   void edges() {

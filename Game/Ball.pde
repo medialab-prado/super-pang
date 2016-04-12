@@ -10,9 +10,6 @@ class Ball {
 
   Boolean b2Small = false;
 
-  Boolean bUpLevel = false;
-  int counterLevel = 0;
-
   Boolean destroyed = false;
 
   color colorStrokeBall = color(104, 104, 134);
@@ -20,7 +17,6 @@ class Ball {
 
   int myInitMillis = millis();
   int timeSpendInitAcc = 200;
-
 
   ///////////////////////////////
   Boolean setDimensions(float _newDim) {
@@ -40,9 +36,9 @@ class Ball {
 
   //Contructor
   Ball() {
-    b2Small = setDimensions(random(minSizeBall, 2.5));//If its too small will not be created and added to the ArrayList
+    b2Small = setDimensions(random(minSizeBall, maxSizeBall));//If its too small will not be created and added to the ArrayList
     location = new PVector(random(width), random(10, 100));
-    velocity = new PVector(random(2, 4), 1); // Direccion Inicial de las bolas
+    velocity = new PVector(random(2, 3), 1); // Direccion Inicial de las bolas
     acceleration = new PVector(0, accDificulty); // Vector Direccion de la aceleración
     InitAcceleration =  new PVector(initCollisionGravityForce.x, initCollisionGravityForce.y);
 
@@ -59,7 +55,7 @@ class Ball {
      */
   }
 
-  Ball(float lastSize, PVector lastLocation, PVector lastVelocity, PVector lastAcc, int direction) {
+  Ball(float lastSize, PVector lastLocation, PVector lastVelocity, PVector lastAcc) {
     //Physic properties
     Boolean isSmaller = setDimensions(lastSize*0.5);
 
@@ -69,15 +65,13 @@ class Ball {
       println("ERROR This should not be tried: Smaller please dont create a ball");
     } else {
       println("New Ball with mass"+str(radius));
-      location = lastLocation;
+      location = lastLocation.copy();//{c}Fix reference issue arrayList get(ball).xxxx
 
       //T=D Crear que solo sean algunas grandes y algunas pequeñas, el resto valores medios (la mayoria )
       velocity = new PVector(lastVelocity.x, lastVelocity.y);
-      velocity.mult(0);
 
       //Init acc to down vector
       acceleration = new PVector(0, accDificulty); // Vector Direccion de la acceleracion
-      //acceleration = new PVector(direction, -0.1);
 
       myInitMillis = millis();
     }
