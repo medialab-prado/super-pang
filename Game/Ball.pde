@@ -38,17 +38,17 @@ class Ball {
   Ball() {
     b2Small = setDimensions(random(minSizeBall, maxSizeBall));//If its too small will not be created and added to the ArrayList
     location = new PVector(random(width), random(10, 100));
-    velocity = new PVector(random(2, 3), 1); // Direccion Inicial de las bolas
+    velocity = initVelocity.copy(); // Direccion Inicial de las bolas
     acceleration = new PVector(0, accDificulty); // Vector Direccion de la aceleración
-    InitAcceleration =  new PVector(initCollisionGravityForce.x, initCollisionGravityForce.y);
+    InitAcceleration =  new PVector(accDificulty, accDificulty);
 
-    /*TODO
+    /*TODO {carles}
      Para hacer que bolas tengas diferentes direcciones crear diferentes clases de bolas.
      Cada clase que tenga un comportamiento diferente.
      Según el tamaño tenemos que la bola cambia de comportamiento.
      P.e Cuando el Tamaño disminuye la bola bota hasta una altura menor
      Necesitariamos definir unas alturas fijas para que tengamos claro donde.
-
+     
      Init acc to down vector
      Hay que conseguir que la bola no se ralentice nunca.
      Si la posición de la bola llega a ser varias veces inferior al edge marcado, se ralentiza.
@@ -65,9 +65,10 @@ class Ball {
       println("ERROR This should not be tried: Smaller please dont create a ball");
     } else {
       println("New Ball with mass"+str(radius));
+
       location = lastLocation.copy();//{c}Fix reference issue arrayList get(ball).xxxx
 
-      //T=D Crear que solo sean algunas grandes y algunas pequeñas, el resto valores medios (la mayoria )
+      //Esto tambien actual como una copia
       velocity = new PVector(lastVelocity.x, lastVelocity.y);
 
       //Init acc to down vector
@@ -78,12 +79,11 @@ class Ball {
   }
 
   void update() {
-    //Set the acceleration in the right direction force
-    //First apply the mass
-    gravityForce.div(1);//mass = 1
 
-    // acceleration = new PVector(0,accDificulty);
+    //Proceso de aplicacion de Fuerzas cada nuevo frame
+    gravityForce.div(1);//inecesario pero si mirais Nature of Code, vereis que se usa cunado la masa es variable.
 
+    //Una aceleration inicial diferente permite que al principio las bolas creen esta parabola 
     if (millis() - myInitMillis > timeSpendInitAcc) {
       acceleration.add(gravityForce);
     } else {

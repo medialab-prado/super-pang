@@ -5,13 +5,15 @@ PVector deltaXVel =  new PVector(3, 0);
 PVector deltaYVel =  new PVector(0, 1);
 PVector gravityForce = new PVector(0, accDificulty);
 
-PVector initGravityForce = new PVector(0, -accDificulty);
-PVector initCollisionGravityForce = new PVector(accDificulty, -accDificulty);
+PVector initVelocity = new PVector(2, 2);
+PVector initInvertVelocity = new PVector(initVelocity.x*-1, initVelocity.y);
+
+PVector initGravityForce = new PVector(0, -accDificulty*2);
 
 int initialBalls = 1;
 float minSizeBall = 2;
 float maxSizeBall = 4;
-float minRadius = 3;
+float minRadius =  2;
 
 //Balls var interaction
 int lastShootedTime = millis();
@@ -59,33 +61,20 @@ void draw() {
         Boolean bSmaller = checkSmaller(ball1.mass*0.3);
         if (!bSmaller) {
 
-          //Crea una Bola en direccion Contraria
-          //if (ball1.velocity.x > 0)ball1.acceleration.x = initCollisionGravityForce.x * -1;
-          //else 
-          ball1.acceleration.x = initCollisionGravityForce.x;
-          ball1.acceleration.y = initCollisionGravityForce.y;
-          Ball Ball2Left = new Ball(ball1.mass, ball1.location, ball1.velocity, ball1.acceleration);//Go Left
+          Ball Ball2Left = new Ball(ball1.mass, ball1.location, initVelocity, initGravityForce);
           balls.add(Ball2Left);  // adding element with specific mass and dimensions
 
-          //Crea auna Bola a favor de la ultima direccion recibida
-          //          if(ball1.velocity.x > 0)ball1.acceleration.x = initCollisionGravityForce.x * -1;
-          //          else ball1.acceleration.x = initCollisionGravityForce.x*+1;
-          //          ball1.acceleration.y = initCollisionGravityForce.y;
-          //          Ball Ball2Right = new Ball(ball1.mass, ball1.location, ball1.velocity, ball1.acceleration, +1);//Go Left
-          //          balls.add(Ball2Right);  // adding element with specific mass and dimensions
-          
-          ball1.acceleration.x = initCollisionGravityForce.x*-1;
-          ball1.acceleration.y = initCollisionGravityForce.y;
-          Ball Ball2Right = new Ball(ball1.mass, ball1.location, ball1.velocity, ball1.acceleration);//Go Left
+          Ball Ball2Right = new Ball(ball1.mass, ball1.location, initInvertVelocity, initGravityForce);//( inverted movement with Velocity)
           balls.add(Ball2Right);
         }
 
         //Elimina la bola
         lastShootedTime = millis();
         balls.remove(i);
-        
-        //Desactiva el Ray
+
+        //Desactiva el Ray y resetear valores internos
         myRay.bRayActive = false;
+        myRay.resetRay();
       }
     }
   }
@@ -106,7 +95,6 @@ void draw() {
 }
 
 void keyPressed() {
-  
 }
 
 //////////////////////////////

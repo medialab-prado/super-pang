@@ -28,6 +28,23 @@ class Ray {
     initTimeRay = millis();
     rayTimeDif = rayTimeAnimation;
   }
+  
+  void resetRay(){
+   
+    ballSize = 10; 
+
+    rayBottom = new PVector(0, 0);
+    rayBottom.y = height - ballSize/2;
+
+    rayTop = new PVector(0, 0);
+    rayTop.y = ballSize/2;
+
+    rayLocation = new PVector(0, height); // Se inicia abajo de la pantalla
+
+    rayTimeAnimation = 2000;
+    initTimeRay = millis();
+    rayTimeDif = rayTimeAnimation;
+  }
 
   void throwRay(){
    // setear punto de inicio
