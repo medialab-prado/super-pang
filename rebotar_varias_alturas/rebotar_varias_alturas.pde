@@ -1,3 +1,9 @@
+/*CodeDojo 2016 Rrocessing 
+Matias, Camila, Carles */
+
+//Learn how to interact with the accelerations and heights in floor collisions
+
+// Example base from 
 // The Nature of Code
 // Daniel Shiffman
 // http://natureofcode.com
@@ -38,7 +44,7 @@ void draw() {
 
   }
 
-  fill(255, 10, 15); 
+  stroke(255, 10, 15); 
   line(0, mouseY, width, mouseY);
 
   fill(0, 102, 153);
@@ -50,7 +56,6 @@ void keyPressed() {
 
   if (key == 'q') {//apply slow or fast acc
     BslowVel = !BslowVel;
-
   } 
   else if (key == 'w') {
     addedAcc = -1.15;

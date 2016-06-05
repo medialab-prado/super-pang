@@ -1,3 +1,4 @@
+// Example base from 
 // The Nature of Code
 // Daniel Shiffman
 // http://natureofcode.com
@@ -9,17 +10,23 @@ class Mover {
   PVector acceleration;
   float mass;
   int radius;
-  
+  float maxHeightJumped = height;
+
   //TODO
   //Apply diferent Color to each ball 
+  int redChannel = (int)random(10, 244);
+  int greenChannel = (int)(255 - redChannel);
+  int blueChannel = (int)random(10, 255);
+  color colorBall = color(redChannel, greenChannel, blueChannel); 
   //And draw the upper jumped height in a line with this color
+  boolean floorInteraction = false;
 
   Mover(float m, float x, float y) {
     mass = m;
     location = new PVector(x, y);
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
-   //Apply dims
+    //Apply dims
     radius = (int)mass*3;
   }
 
@@ -32,12 +39,24 @@ class Mover {
     velocity.add(acceleration);
     location.add(velocity);
     acceleration.mult(0);
+
+    if (floorInteraction) {
+      if (location.y < maxHeightJumped) {
+        maxHeightJumped = location.y - radius;
+      }
+    }
   }
 
   void display() {
+    
+    //Salto de altura maxima consegida y actualizada despues de cada salto
+    stroke(colorBall);
+    line(0, maxHeightJumped, width, maxHeightJumped);
+    
+    //Paint ball
     stroke(0);
     strokeWeight(2);
-    fill(0, 127);
+    fill(colorBall);
     ellipse(location.x, location.y, radius*2, radius*2);
   }
 
@@ -56,7 +75,8 @@ class Mover {
         velocity.y *= addedAcc;
         //BslowVel = false;
       } else velocity.y *= -1;
-      location.y = height-radius-1;
+      location.y = height-radius-1; //Cuando la bola toca el suelo, recolocamos la bola para que siga en direccion contraria y no vuelva a entrar en este bucle
+      floorInteraction = true;
     }
   }
 }
