@@ -8,12 +8,19 @@ class Mover {
   PVector velocity;
   PVector acceleration;
   float mass;
+  int radius;
+  
+  //TODO
+  //Apply diferent Color to each ball 
+  //And draw the upper jumped height in a line with this color
 
   Mover(float m, float x, float y) {
     mass = m;
     location = new PVector(x, y);
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
+   //Apply dims
+    radius = (int)mass*3;
   }
 
   void applyForce(PVector force) {
@@ -31,7 +38,7 @@ class Mover {
     stroke(0);
     strokeWeight(2);
     fill(0, 127);
-    ellipse(location.x, location.y, mass*16, mass*16);
+    ellipse(location.x, location.y, radius*2, radius*2);
   }
 
   void checkEdges() {
@@ -44,12 +51,12 @@ class Mover {
       velocity.x *= -1;
     }
 
-    if (location.y > height) {
+    if (location.y > height-radius) {
       if (BslowVel) {
-        velocity.y *= -0.75;
-        BslowVel = false;
+        velocity.y *= addedAcc;
+        //BslowVel = false;
       } else velocity.y *= -1;
-      location.y = height;
+      location.y = height-radius-1;
     }
   }
 }
