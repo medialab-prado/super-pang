@@ -2,6 +2,7 @@
 Matias, Camila, Carles */
 
 //Learn how to interact with the accelerations and heights in floor collisions
+//Check how to pause game to see some internal values.
 
 // Example base from 
 // The Nature of Code

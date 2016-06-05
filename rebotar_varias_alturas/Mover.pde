@@ -8,9 +8,11 @@ class Mover {
   PVector location;
   PVector velocity;
   PVector acceleration;
+  PVector last_velocity;
   float mass;
   int radius;
   float maxHeightJumped = height;
+
 
   //TODO
   //Apply diferent Color to each ball 
@@ -28,6 +30,7 @@ class Mover {
     acceleration = new PVector(0, 0);
     //Apply dims
     radius = (int)mass*3;
+    last_velocity = new PVector(0, 0);
   }
 
   void applyForce(PVector force) {
@@ -36,23 +39,29 @@ class Mover {
   }
 
   void update() {
+
     velocity.add(acceleration);
     location.add(velocity);
     acceleration.mult(0);
 
-    if (floorInteraction) {
-      if (location.y < maxHeightJumped) {
-        maxHeightJumped = location.y - radius;
-      }
+    if (velocity.y > 0 && last_velocity.y <= 0) { //Si la velocidad actual baja y la pasada subia o era cero
+      maxHeightJumped = location.y - radius;
     }
+
+
+    //update last Velocity
+    last_velocity = velocity;
   }
 
   void display() {
-    
+
+    textSize(8);
+    text("Vel.y= " + str(velocity.y) + " LastVel.y= " + str(velocity.y), location.x, location.y);
+  
     //Salto de altura maxima consegida y actualizada despues de cada salto
     stroke(colorBall);
     line(0, maxHeightJumped, width, maxHeightJumped);
-    
+
     //Paint ball
     stroke(0);
     strokeWeight(2);
