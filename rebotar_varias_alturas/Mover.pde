@@ -1,10 +1,11 @@
-// Example base from 
+// Example base from  //<>//
 // The Nature of Code
 // Daniel Shiffman
 // http://natureofcode.com
 
 class Mover {
 
+  int id;
   PVector location;
   PVector velocity;
   PVector acceleration;
@@ -23,7 +24,8 @@ class Mover {
   //And draw the upper jumped height in a line with this color
   boolean floorInteraction = false;
 
-  Mover(float m, float x, float y) {
+  Mover(float m, float x, float y, int _id) {
+    id = _id;
     mass = m;
     location = new PVector(x, y);
     velocity = new PVector(0, 0);
@@ -44,20 +46,22 @@ class Mover {
     location.add(velocity);
     acceleration.mult(0);
 
-    if (velocity.y > 0 && last_velocity.y <= 0) { //Si la velocidad actual baja y la pasada subia o era cero
-      maxHeightJumped = location.y - radius;
+    if (id == 0) {//test for only id 0
+
+      if (velocity.y > 0 && last_velocity.y <= 0) { //Si la velocidad actual baja y la pasada subia o era cero
+        maxHeightJumped = location.y - radius;
+        println("id = " +str(id) + "New height detected"+str(millis())+ " velocity = " + str(velocity.y) + "last velocity = " + str(last_velocity.y));
+      } else {
+        println("ELSE " + "id = " +str(id) + "New height detected"+str(millis())+ " velocity = " + str(velocity.y) + "last velocity = " + str(last_velocity.y));
+      }
     }
-
-
-    //update last Velocity
-    last_velocity = velocity;
   }
 
   void display() {
 
     textSize(8);
     text("Vel.y= " + str(velocity.y) + " LastVel.y= " + str(velocity.y), location.x, location.y);
-  
+
     //Salto de altura maxima consegida y actualizada despues de cada salto
     stroke(colorBall);
     line(0, maxHeightJumped, width, maxHeightJumped);
@@ -67,6 +71,9 @@ class Mover {
     strokeWeight(2);
     fill(colorBall);
     ellipse(location.x, location.y, radius*2, radius*2);
+
+    //update last Velocity
+    last_velocity = velocity;
   }
 
   void checkEdges() {
