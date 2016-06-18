@@ -32,6 +32,25 @@ Julian miJulian;
 int maxPlayerHeight = 30;
 int minPlayerHeight = 10;
 
+
+////////////
+int mouseXJulian;
+int mouseYJulian;
+
+
+///osc
+
+import oscP5.*;
+import netP5.*;
+
+OscP5 oscP5;
+NetAddress myRemoteLocation;
+
+float pangBlobX = 0;
+float pangBlobY = 0;
+
+PImage img;
+
 void setup() {
   size(192, 157);
 
@@ -44,10 +63,16 @@ void setup() {
   }
 
   miJulian = new Julian();
+
+  //*****OSC
+  oscP5 = new OscP5(this, 12345);
+  myRemoteLocation = new NetAddress("127.0.0.1", 12345);
+  
+  img = loadImage ("fondo.jpg");
 }
 
 void draw() {
-  background(255);
+  background(img);
   fill(127);
 
   //Calc once if Balls can be collided. This is used inside Ball class
@@ -92,19 +117,43 @@ void draw() {
 
   miJulian.update(balls);
   miJulian.display();
+  
+  /////
+  
+
+  
+  //osc
+  fill(255,0,0);
+  ellipse(pangBlobX*width, pangBlobY*height, 10,10);
+  
+}
+
+void mouseMoved(){
+  mouseXJulian = mouseX;
+  mouseYJulian = mouseY;
+  
 }
 
 void keyPressed() {
+  //if (key=='a'){
+    bmousePressed = true;
+  //}
+}
+
+void keyReleased() {
+  //if (key=='a'){
+    bmousePressed = false;
+  //}
 }
 
 //////////////////////////////
 void mousePressed() {
-  bmousePressed = true;
+  
 }
 
 //////////////////////////////
 void mouseReleased() {
-  bmousePressed = false;
+  
 }
 
 ////////////////////////////////////////////////
@@ -131,4 +180,30 @@ Boolean checkSmaller(float _newDim) {
   }
 
   return b2Small;
+}
+void oscEvent(OscMessage theOscMessage) {
+  /* print the address pattern and the typetag of the received OscMessage */
+  print("### received an osc message.");
+  print(" addrpattern: "+theOscMessage.addrPattern());
+  println(" typetag: "+theOscMessage.typetag());
+
+
+  if (theOscMessage.checkAddrPattern("/PangBlob") == true) {
+    if (theOscMessage.checkTypetag("ff")) {
+      float OSCvalue0 = theOscMessage.get(0).floatValue();
+      println(" values 0: "+OSCvalue0);
+      pangBlobX = OSCvalue0;
+
+      float OSCvalue1 = theOscMessage.get(1).floatValue();
+      println(" values 1: "+OSCvalue1);
+      pangBlobY = OSCvalue1;
+      
+      
+      //add to our system
+      mouseXJulian = (int)(pangBlobX*width);
+      mouseYJulian = (int)(pangBlobY*height);
+      
+      return;
+    }
+  }
 }

@@ -1,25 +1,26 @@
 class Julian {
   PVector loc;
   PVector dim;
+  
 
   void update(ArrayList<Ball> ballsInput) {
-    loc = new PVector(mouseX, mouseY - 5);
-    dim = new PVector(10, height - mouseY);
+    loc = new PVector(mouseXJulian, mouseYJulian - 5);
+    dim = new PVector(10, height - mouseYJulian);
 
 
 
 
     //update character dimensions
-    if (height - mouseY <= maxPlayerHeight && height - mouseY >= minPlayerHeight) {
-      loc.x = mouseX - 5;
-      loc.y = mouseY;
-      dim.y = height - mouseY;
-    } else if (height - mouseY >= maxPlayerHeight) {
-      loc.x = mouseX - 5;
+    if (height - mouseYJulian <= maxPlayerHeight && height - mouseYJulian >= minPlayerHeight) {
+      loc.x = mouseXJulian - 5;
+      loc.y = mouseYJulian;
+      dim.y = height - mouseYJulian;
+    } else if (height - mouseYJulian >= maxPlayerHeight) {
+      loc.x = mouseXJulian - 5;
       loc.y = height - maxPlayerHeight;
       dim.y = maxPlayerHeight;
     } else {
-      loc.x = mouseX - 5;
+      loc.x = mouseXJulian - 5;
       loc.y = height - minPlayerHeight;
       dim.y = minPlayerHeight;
     }
@@ -36,14 +37,14 @@ class Julian {
   }
 
   void display() {
-    fill(0, 255, 255);
-    // rect(loc.x, height - dim.x, dim.y, dim.x);
+    fill(255, 0, 255);
+    
 
     //Paint Player
     rect(loc.x, loc.y, dim.x, dim.y);
-    fill(255, 0, 0);
-    ellipse(loc.x, loc.y, 5, 5);
-    ellipse(loc.x + dim.x, loc.y, 5, 5);
+    
+    //ellipse(loc.x, loc.y, 5, 5);
+    //ellipse(loc.x + dim.x, loc.y, 5, 5);
   }
 
   boolean isCollidingCircleRectangle(

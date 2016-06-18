@@ -51,11 +51,11 @@ class Ray {
    
   }
   void update() {
-    rayBottom.x = mouseX;
-    rayTop.x = mouseX;
+    rayBottom.x = mouseXJulian;
+    rayTop.x = mouseXJulian;
 
 
-    if (mousePressed == true) {
+    if (keyPressed == true) {
       bRayActive = true;
       initTimeRay = millis();
     }
@@ -79,7 +79,7 @@ class Ray {
       }*/
 
       rayTimeDifMapped = map(rayTimeDif, 0, rayTimeAnimation, height, 0);
-      rayLocation.x = mouseX;
+      rayLocation.x = mouseXJulian;
       rayLocation.y = rayTimeDifMapped;
     }
   }
@@ -89,13 +89,13 @@ class Ray {
     noStroke();
 
     if (bRayActive) {
-
+ 
+      fill(0, 0, 255);
       ellipse(rayLocation.x, rayLocation.y, ballSize, ballSize);
-      fill(255, 0, 0);
-      ellipse(rayBottom.x, rayBottom.y, ballSize, ballSize);
+      //ellipse(rayBottom.x, rayBottom.y, ballSize, ballSize);
 
       if (bRayActive == true) {
-        stroke(255, 0, 0);
+        stroke(0, 0, 255);
         line(rayBottom.x, rayBottom.y - ballSize/2, rayLocation.x, rayLocation.y);
       }
     }
