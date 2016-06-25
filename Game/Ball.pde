@@ -37,7 +37,7 @@ class Ball {
   //Contructor
   Ball() {
     b2Small = setDimensions(random(minSizeBall, maxSizeBall));//If its too small will not be created and added to the ArrayList
-    location = new PVector(random(width), random(10, 100));
+    location = new PVector(random(widthWindow), random(10, 100));
     velocity = initVelocity.copy(); // Direccion Inicial de las bolas
     acceleration = new PVector(0, accDificulty); // Vector Direccion de la aceleración
     InitAcceleration =  new PVector(accDificulty, accDificulty);
@@ -80,7 +80,7 @@ class Ball {
 
   void update() {
 
-    //Proceso de aplicacion de Fuerzas cada nuevo frame
+    //Proceso de aplicacwidthWindowion de Fuerzas cada nuevo frame
     gravityForce.div(1);//inecesario pero si mirais Nature of Code, vereis que se usa cunado la masa es variable.
 
     //Una aceleration inicial diferente permite que al principio las bolas creen esta parabola 
@@ -114,9 +114,9 @@ class Ball {
     }
 
     //Derecha
-    if (location.x > width - radius) {
+    if (location.x > widthWindow - radius) {
       velocity.x *= -1;
-      location.x = width - radius;
+      location.x = widthWindow - radius;
     }
 
     //Arriba
@@ -126,9 +126,9 @@ class Ball {
      }
      */
     //Abajo
-    if (location.y >= height-radius) {
+    if (location.y >= heightWindow-radius) {
       velocity.y *= -1;
-      location.y=height-radius-1;
+      location.y=heightWindow-radius-1;
     }
   }
 

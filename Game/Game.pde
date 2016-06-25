@@ -1,3 +1,7 @@
+//window vars
+int widthWindow = 192;
+int heightWindow = 157;
+
 //Vars for Balls
 ArrayList<Ball> balls;
 float accDificulty = 0.1; // en 0.3 disminuye, con el resto sigue igual, no disminuye
@@ -24,8 +28,8 @@ Ray myRay;
 Julian miJulian;
 int maxPlayerHeight = 30;
 int minPlayerHeight = 10;
-int mouseXJulian;
-int mouseYJulian;
+float mouseXJulian;
+float mouseYJulian;
 
 
 ///osc
@@ -45,12 +49,16 @@ float minSizeBall = 2;
 float maxSizeBall = 4;
 float minRadius =  2;
 
+
+/////////////////////
+int statusGame = 0; // 0 es readyToInit, 1 Playing, 2 GameOver
+
 void setup() {
   
-  //fullScreen();
-  frame.setLocation(40, 40);
-   
-  size(192, 157);
+  fullScreen(); //size(192, 157); 
+
+  //Game Vars
+  statusGame = 0;
 
   //ray vars
   myRay = new Ray();
@@ -69,10 +77,68 @@ void setup() {
   BackGroundImg = loadImage ("fondo.jpg");
 }
 
+void resetGame(){
+  
+  //Game Vars
+  statusGame = 0;
+
+  for (int i = 0; i < initialBalls; i++) {
+    balls.add(new Ball());
+  }
+  
+}
+
 void draw() {
+  background(204);
+  
+  translate(40, 40);
+  
+  if(statusGame == 0){
+     drawReadyToPlay();
+  }
+  else if(statusGame == 1){
+     drawPlaying();
+     
+     if(balls.size() == 0){
+       statusGame = 2;
+     }
+  }
+  else if(statusGame == 2){
+    drawGameOver();
+  }
+
+  //osc
+  fill(255,0,0);
+  ellipse(pangBlobX*widthWindow, pangBlobY*heightWindow, 10,10);
+  
+}
+
+//----------------------------------------
+void drawGameOver(){
+  
+   text("GAME OVER Press KEY to Start Again", 100, 100);
+  //HardCoded RESET
+   if(keyPressed == true){
+    resetGame();
+  }
+}
+
+//----------------------------------------
+void drawReadyToPlay(){
+  text("Press P to Start Play", 100, 100);
+  
+  if(keyPressed == true){
+    statusGame = 1;
+  }
+}
+
+
+//----------------------------------------
+void drawPlaying(){
   
   //Ideally this change for each new game
-  background(BackGroundImg);
+  //background(BackGroundImg); no works for full Screen
+  image(BackGroundImg, 0, 0);
   fill(127);
 
   //Calc once if Balls can be collided. This is used inside Ball class
@@ -119,18 +185,18 @@ void draw() {
   miJulian.display();
   
   /////
-  
-
-  
-  //osc
-  fill(255,0,0);
-  ellipse(pangBlobX*width, pangBlobY*height, 10,10);
-  
 }
 
 void mouseMoved(){
+
   mouseXJulian = mouseX;
+  if(mouseXJulian > widthWindow){
+    mouseXJulian = widthWindow;
+  }
   mouseYJulian = mouseY;
+  if(mouseYJulian > heightWindow){
+    mouseYJulian = heightWindow;
+  }
   
 }
 
@@ -173,7 +239,7 @@ Boolean checkSmaller(float _newDim) {
 
   float mass = _newDim;//Exmple for 5
   float diam = mass*10;//50
-  float radius = diam/2;//25
+  float radius = diam/2;//25heightWindow
 
   if (radius < minRadius) {
     b2Small = true;
@@ -200,8 +266,8 @@ void oscEvent(OscMessage theOscMessage) {
       
       
       //add to our system
-      mouseXJulian = (int)(pangBlobX*width);
-      mouseYJulian = (int)(pangBlobY*height);
+      mouseXJulian = (int)(pangBlobX*widthWindow);
+      mouseYJulian = (int)(pangBlobY*heightWindow);
       
       return;
     }

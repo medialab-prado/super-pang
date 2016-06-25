@@ -5,23 +5,23 @@ class Julian {
 
   void update(ArrayList<Ball> ballsInput) {
     loc = new PVector(mouseXJulian, mouseYJulian - 5);
-    dim = new PVector(10, height - mouseYJulian);
+    dim = new PVector(10, heightWindow - mouseYJulian);
 
 
 
 
     //update character dimensions
-    if (height - mouseYJulian <= maxPlayerHeight && height - mouseYJulian >= minPlayerHeight) {
+    if (heightWindow - mouseYJulian <= maxPlayerHeight && heightWindow - mouseYJulian >= minPlayerHeight) {
       loc.x = mouseXJulian - 5;
       loc.y = mouseYJulian;
-      dim.y = height - mouseYJulian;
-    } else if (height - mouseYJulian >= maxPlayerHeight) {
+      dim.y = heightWindow - mouseYJulian;
+    } else if (heightWindow - mouseYJulian >= maxPlayerHeight) {
       loc.x = mouseXJulian - 5;
-      loc.y = height - maxPlayerHeight;
+      loc.y = heightWindow - maxPlayerHeight;
       dim.y = maxPlayerHeight;
     } else {
       loc.x = mouseXJulian - 5;
-      loc.y = height - minPlayerHeight;
+      loc.y =heightWindow - minPlayerHeight;
       dim.y = minPlayerHeight;
     }
 

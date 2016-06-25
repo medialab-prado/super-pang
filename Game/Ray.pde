@@ -17,12 +17,12 @@ class Ray {
     ballSize = 10; 
 
     rayBottom = new PVector(0, 0);
-    rayBottom.y = height - ballSize/2;
+    rayBottom.y =heightWindow - ballSize/2;
 
     rayTop = new PVector(0, 0);
     rayTop.y = ballSize/2;
 
-    rayLocation = new PVector(0, height); // Se inicia abajo de la pantalla
+    rayLocation = new PVector(0,heightWindow); // Se inicia abajo de la pantalla
 
     rayTimeAnimation = 2000;
     initTimeRay = millis();
@@ -34,12 +34,12 @@ class Ray {
     ballSize = 10; 
 
     rayBottom = new PVector(0, 0);
-    rayBottom.y = height - ballSize/2;
+    rayBottom.y =heightWindow - ballSize/2;
 
     rayTop = new PVector(0, 0);
     rayTop.y = ballSize/2;
 
-    rayLocation = new PVector(0, height); // Se inicia abajo de la pantalla
+    rayLocation = new PVector(0,heightWindow); // Se inicia abajo de la pantalla
 
     rayTimeAnimation = 2000;
     initTimeRay = millis();
@@ -63,7 +63,7 @@ class Ray {
     //Start to check collisions if ray is active
     if (bRayActive) {
 
-      if (rayTimeDifMapped == height) {
+      if (rayTimeDifMapped ==heightWindow) {
         rayTimeDif = 0;
       }
 
@@ -75,10 +75,10 @@ class Ray {
       }
 
       /*if (millis() == 0) {
-        rayLocation.y = height -height/ballSize;
+        rayLocation.y =heightWindow -height/ballSize;
       }*/
 
-      rayTimeDifMapped = map(rayTimeDif, 0, rayTimeAnimation, height, 0);
+      rayTimeDifMapped = map(rayTimeDif, 0, rayTimeAnimation,heightWindow, 0);
       rayLocation.x = mouseXJulian;
       rayLocation.y = rayTimeDifMapped;
     }
