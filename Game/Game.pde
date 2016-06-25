@@ -4,16 +4,9 @@ float accDificulty = 0.1; // en 0.3 disminuye, con el resto sigue igual, no dism
 PVector deltaXVel =  new PVector(3, 0);
 PVector deltaYVel =  new PVector(0, 1);
 PVector gravityForce = new PVector(0, accDificulty);
-
 PVector initVelocity = new PVector(2, 2);
 PVector initInvertVelocity = new PVector(initVelocity.x*-1, initVelocity.y);
-
 PVector initGravityForce = new PVector(0, -accDificulty*2);
-
-int initialBalls = 1;
-float minSizeBall = 2;
-float maxSizeBall = 4;
-float minRadius =  2;
 
 //Balls var interaction
 int lastShootedTime = millis();
@@ -31,15 +24,11 @@ Ray myRay;
 Julian miJulian;
 int maxPlayerHeight = 30;
 int minPlayerHeight = 10;
-
-
-////////////
 int mouseXJulian;
 int mouseYJulian;
 
 
 ///osc
-
 import oscP5.*;
 import netP5.*;
 
@@ -49,9 +38,18 @@ NetAddress myRemoteLocation;
 float pangBlobX = 0;
 float pangBlobY = 0;
 
-PImage img;
+///////////////////////
+PImage BackGroundImg;
+int initialBalls = 1;
+float minSizeBall = 2;
+float maxSizeBall = 4;
+float minRadius =  2;
 
 void setup() {
+  
+  //fullScreen();
+  frame.setLocation(40, 40);
+   
   size(192, 157);
 
   //ray vars
@@ -68,11 +66,13 @@ void setup() {
   oscP5 = new OscP5(this, 12345);
   myRemoteLocation = new NetAddress("127.0.0.1", 12345);
   
-  img = loadImage ("fondo.jpg");
+  BackGroundImg = loadImage ("fondo.jpg");
 }
 
 void draw() {
-  background(img);
+  
+  //Ideally this change for each new game
+  background(BackGroundImg);
   fill(127);
 
   //Calc once if Balls can be collided. This is used inside Ball class
