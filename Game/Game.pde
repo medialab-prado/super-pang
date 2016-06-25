@@ -259,16 +259,27 @@ void oscEvent(OscMessage theOscMessage) {
   println(" typetag: "+theOscMessage.typetag());
 
 
-  if (theOscMessage.checkAddrPattern("/PangBlob") == true) {
-    if (theOscMessage.checkTypetag("ff")) {
-      float OSCvalue0 = theOscMessage.get(0).floatValue();
+  if (theOscMessage.checkAddrPattern("/GameBlob") == true) {
+    if (theOscMessage.checkTypetag("ffff")) {
+      float OSCvalue0 = theOscMessage.get(0).floatValue(); // X position [0..1]
       println(" values 0: "+OSCvalue0);
       pangBlobX = OSCvalue0;
 
-      float OSCvalue1 = theOscMessage.get(1).floatValue();
+      float OSCvalue1 = theOscMessage.get(1).floatValue();  // Y position [0..1]
       println(" values 1: "+OSCvalue1);
       pangBlobY = OSCvalue1;
 
+      float OSCvalueUp = theOscMessage.get(2).floatValue();  // UP Force position [0..1]
+      println(" values Up: "+OSCvalueUp);
+      if(OSCvalueUp > 0.2){
+        bmousePressed = true; //<>//
+      }
+      
+      /*
+      float OSCvalueDown = theOscMessage.get(3).floatValue(); // DOWN Force position [0..1]
+      println(" values 1: "+OSCvalue1);
+      pangBlobY = OSCvalue1;
+      */
 
       //add to our system
       mouseXJulian = (int)(pangBlobX*widthWindow);
