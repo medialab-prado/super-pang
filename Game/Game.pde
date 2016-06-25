@@ -32,6 +32,12 @@ float mouseXJulian;
 float mouseYJulian;
 
 
+//Vars for Game
+int initTime;
+int currentTime;
+int points;
+
+
 ///osc
 import oscP5.*;
 import netP5.*;
@@ -54,7 +60,7 @@ float minRadius =  2;
 int statusGame = 0; // 0 es readyToInit, 1 Playing, 2 GameOver
 
 void setup() {
-  
+
   fullScreen(); //size(192, 157); 
 
   //Game Vars
@@ -73,69 +79,71 @@ void setup() {
   //*****OSC
   oscP5 = new OscP5(this, 12345);
   myRemoteLocation = new NetAddress("127.0.0.1", 12345);
-  
+
   BackGroundImg = loadImage ("fondo.jpg");
 }
 
-void resetGame(){
-  
+void resetGame() {
+
   //Game Vars
   statusGame = 0;
 
   for (int i = 0; i < initialBalls; i++) {
     balls.add(new Ball());
   }
-  
 }
 
 void draw() {
   background(204);
-  
+
   translate(40, 40);
-  
-  if(statusGame == 0){
-     drawReadyToPlay();
-  }
-  else if(statusGame == 1){
-     drawPlaying();
-     
-     if(balls.size() == 0){
-       statusGame = 2;
-     }
-  }
-  else if(statusGame == 2){
+
+  if (statusGame == 0) {
+    drawReadyToPlay();
+  } else if (statusGame == 1) {
+    drawPlaying();
+
+    if (balls.size() == 0) {
+      statusGame = 2;
+    }
+  } else if (statusGame == 2) {
     drawGameOver();
   }
 
   //osc
-  fill(255,0,0);
-  ellipse(pangBlobX*widthWindow, pangBlobY*heightWindow, 10,10);
+  fill(255, 0, 0);
+  ellipse(pangBlobX*widthWindow, pangBlobY*heightWindow, 10, 10);
   
+  
+  textAlign(CENTER);
+  textSize(10);
+  text ("time:"+currentTime, 140, 20);
+  text ("points:"+points, 140, 30);
 }
 
 //----------------------------------------
-void drawGameOver(){
-  
-   text("GAME OVER Press KEY to Start Again", 100, 100);
-  //HardCoded RESET
-   if(keyPressed == true){
-    resetGame();
-  }
+void drawGameOver() {
+
+  text("GAME OVER Press KEY to Start Again", 100, 100);
+
+  updatePoints();
 }
 
 //----------------------------------------
-void drawReadyToPlay(){
+void drawReadyToPlay() {
   text("Press P to Start Play", 100, 100);
-  
-  if(keyPressed == true){
+
+  if (keyPressed == true) {
     statusGame = 1;
   }
 }
 
 
 //----------------------------------------
-void drawPlaying(){
-  
+void drawPlaying() {
+
+  updateTime();
+
   //Ideally this change for each new game
   //background(BackGroundImg); no works for full Screen
   image(BackGroundImg, 0, 0);
@@ -183,43 +191,40 @@ void drawPlaying(){
 
   miJulian.update(balls);
   miJulian.display();
-  
+
   /////
 }
 
-void mouseMoved(){
+void mouseMoved() {
 
   mouseXJulian = mouseX;
-  if(mouseXJulian > widthWindow){
+  if (mouseXJulian > widthWindow) {
     mouseXJulian = widthWindow;
   }
   mouseYJulian = mouseY;
-  if(mouseYJulian > heightWindow){
+  if (mouseYJulian > heightWindow) {
     mouseYJulian = heightWindow;
   }
-  
 }
 
 void keyPressed() {
   //if (key=='a'){
-    bmousePressed = true;
+  bmousePressed = true;
   //}
 }
 
 void keyReleased() {
   //if (key=='a'){
-    bmousePressed = false;
+  bmousePressed = false;
   //}
 }
 
 //////////////////////////////
 void mousePressed() {
-  
 }
 
 //////////////////////////////
 void mouseReleased() {
-  
 }
 
 ////////////////////////////////////////////////
@@ -263,13 +268,34 @@ void oscEvent(OscMessage theOscMessage) {
       float OSCvalue1 = theOscMessage.get(1).floatValue();
       println(" values 1: "+OSCvalue1);
       pangBlobY = OSCvalue1;
-      
-      
+
+
       //add to our system
       mouseXJulian = (int)(pangBlobX*widthWindow);
       mouseYJulian = (int)(pangBlobY*heightWindow);
-      
+
       return;
+    }
+  }
+}
+
+//-----------------------------------
+void updateTime() {
+  initTime = 180;
+  currentTime = initTime - (millis()/1000);
+}
+
+//-----------------------------------
+void updatePoints() {
+
+  if (currentTime  > 0) {
+    points = points + 3;
+    currentTime--;
+  }
+  else{
+    //HardCoded RESET
+    if (keyPressed == true) {
+      resetGame();
     }
   }
 }
