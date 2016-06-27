@@ -31,7 +31,7 @@ class Julian {
       collisionActual = isCollidingCircleRectangle(b.location.x, b.location.y, b.radius, loc.x, loc.y, dim.x, dim.y);
 
       if (collisionActual == true) {
-        println("COlLISIONNNNNNN!!!!!!!");
+        //println("COlLISIONNNNNNN!!!!!!!");
       }
     }
   }
