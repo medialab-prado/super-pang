@@ -1,68 +1,59 @@
 class Ray {
   //Rayo interaction
   // down
-  float ballSize;
+  float ballSize = 3;
   PVector rayBottom;
   PVector rayTop;
-
   PVector rayLocation;
   int initTimeRay;
-  int rayTimeAnimation;
+  int rayTimeAnimation = 2000;
+  ;
   boolean bRayActive;
   float rayTimeDif;//tiempo de vida del rayo
   float rayTimeDifMapped;
 
-  //Contructor
-  Ray() {
-    ballSize = 10; 
+  void initRay() {
 
     rayBottom = new PVector(0, 0);
     rayBottom.y = heightWindow;
 
     rayTop = new PVector(0, 0);
-    rayTop.y = ballSize/2;
+    rayTop.y = 0;//ballSize/2;
 
     rayLocation = new PVector(0, heightWindow); // Se inicia abajo de la pantalla
 
-    rayTimeAnimation = 2000;
     initTimeRay = millis();
     rayTimeDif = rayTimeAnimation;
   }
 
+  //Contructor
+  Ray() {
+    initRay();
+  }
+
   void resetRay() {
-
-    ballSize = 10; 
-
-    rayBottom = new PVector(0, 0);
-    rayBottom.y =heightWindow - ballSize/2;
-
-    rayTop = new PVector(0, 0);
-    rayTop.y = ballSize/2;
-
-    rayLocation = new PVector(0, heightWindow); // Se inicia abajo de la pantalla
-
-    rayTimeAnimation = 2000;
-    initTimeRay = millis();
-    rayTimeDif = rayTimeAnimation;
+    initRay();
   }
 
   void throwRay() {
     // setear punto de inicio
   }
-  
-  void startShootRay(){
-      bRayActive = true;
-      initTimeRay = millis();
 
-      rayBottom.x = mouseXJulian;
-      rayTop.x = mouseXJulian;
-      rayLocation.x = mouseXJulian;
+  void startShootRay() {
+    bRayActive = true;
+    initTimeRay = millis();
+
+    rayBottom.x = mouseXJulian;
+    rayTop.x = mouseXJulian;
+    rayLocation.x = mouseXJulian;
   }
-  
+
   void update() {
 
     if (keyPressed == true && bRayActive == false) {
-      startShootRay();
+      if (key == 's') {
+        startShootRay();
+      }
     }
 
     //Start to check collisions if ray is active
