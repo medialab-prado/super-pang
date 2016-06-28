@@ -4,7 +4,7 @@ class Ray {
   float ballSize;
   PVector rayBottom;
   PVector rayTop;
-  
+
   PVector rayLocation;
   int initTimeRay;
   int rayTimeAnimation;
@@ -17,20 +17,20 @@ class Ray {
     ballSize = 10; 
 
     rayBottom = new PVector(0, 0);
-    rayBottom.y =heightWindow - ballSize/2;
+    rayBottom.y = heightWindow;
 
     rayTop = new PVector(0, 0);
     rayTop.y = ballSize/2;
 
-    rayLocation = new PVector(0,heightWindow); // Se inicia abajo de la pantalla
+    rayLocation = new PVector(0, heightWindow); // Se inicia abajo de la pantalla
 
     rayTimeAnimation = 2000;
     initTimeRay = millis();
     rayTimeDif = rayTimeAnimation;
   }
-  
-  void resetRay(){
-   
+
+  void resetRay() {
+
     ballSize = 10; 
 
     rayBottom = new PVector(0, 0);
@@ -39,25 +39,30 @@ class Ray {
     rayTop = new PVector(0, 0);
     rayTop.y = ballSize/2;
 
-    rayLocation = new PVector(0,heightWindow); // Se inicia abajo de la pantalla
+    rayLocation = new PVector(0, heightWindow); // Se inicia abajo de la pantalla
 
     rayTimeAnimation = 2000;
     initTimeRay = millis();
     rayTimeDif = rayTimeAnimation;
   }
 
-  void throwRay(){
-   // setear punto de inicio
-   
+  void throwRay() {
+    // setear punto de inicio
   }
-  void update() {
-    rayBottom.x = mouseXJulian;
-    rayTop.x = mouseXJulian;
-
-
-    if (keyPressed == true) {
+  
+  void startShootRay(){
       bRayActive = true;
       initTimeRay = millis();
+
+      rayBottom.x = mouseXJulian;
+      rayTop.x = mouseXJulian;
+      rayLocation.x = mouseXJulian;
+  }
+  
+  void update() {
+
+    if (keyPressed == true && bRayActive == false) {
+      startShootRay();
     }
 
     //Start to check collisions if ray is active
@@ -74,12 +79,8 @@ class Ray {
         rayTimeDif = 0;
       }
 
-      /*if (millis() == 0) {
-        rayLocation.y =heightWindow -height/ballSize;
-      }*/
-
-      rayTimeDifMapped = map(rayTimeDif, 0, rayTimeAnimation,heightWindow, 0);
-      rayLocation.x = mouseXJulian;
+      //Animation Ray Y 
+      rayTimeDifMapped = map(rayTimeDif, 0, rayTimeAnimation, heightWindow, 0);
       rayLocation.y = rayTimeDifMapped;
     }
   }
@@ -89,14 +90,14 @@ class Ray {
     noStroke();
 
     if (bRayActive) {
- 
+
       fill(0, 0, 255);
       ellipse(rayLocation.x, rayLocation.y, ballSize, ballSize);
       //ellipse(rayBottom.x, rayBottom.y, ballSize, ballSize);
 
       if (bRayActive == true) {
         stroke(0, 0, 255);
-        line(rayBottom.x, rayBottom.y - ballSize/2, rayLocation.x, rayLocation.y);
+        line(rayBottom.x, rayBottom.y, rayLocation.x, rayLocation.y);
       }
     }
   }

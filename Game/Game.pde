@@ -12,6 +12,7 @@ PVector initVelocity = new PVector(2, 2);
 PVector initInvertVelocity = new PVector(initVelocity.x*-1, initVelocity.y);
 PVector initGravityForce = new PVector(0, -accDificulty*2);
 
+
 //Balls var interaction
 int lastShootedTime = millis();
 int waitTimeBeforeShoot = 1000;
@@ -94,7 +95,7 @@ void resetGame() {
 }
 
 void draw() {
-  background(204);
+  background(0);
 
   translate(40, 40);
 
