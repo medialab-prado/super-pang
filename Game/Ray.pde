@@ -7,7 +7,6 @@ class Ray {
   PVector rayLocation;
   int initTimeRay;
   int rayTimeAnimation = 2000;
-  ;
   boolean bRayActive;
   float rayTimeDif;//tiempo de vida del rayo
   float rayTimeDifMapped;

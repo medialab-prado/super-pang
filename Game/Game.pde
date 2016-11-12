@@ -240,9 +240,8 @@ void keyPressed() {
   }
   
   if(key == ' '){
-    
     myRay.bRayActive = true;
-    myRay.initTimeRay = millis();
+    myRay.startShootRay();
   }
 }
 
