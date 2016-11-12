@@ -25,9 +25,10 @@ int lastShootedTime = millis();
 int waitTimeBeforeShoot = 1000;
 Boolean bBallsReadyCollision = false;
 
-////Vars for Mouse Interaction
+//Vars for Mouse Interaction
 color colorMouseInteraction = color(255, 204, 0);
 Boolean bmousePressed = false;
+Boolean bManualControl = true;
 
 //Vars for Rays
 Ray myRay;
@@ -230,6 +231,19 @@ void mouseMoved() {
 }
 
 void keyPressed() {
+  
+  if(key == 'm'){
+    bManualControl = true;
+  }
+  if(key == 'M'){
+     bManualControl = false;
+  }
+  
+  if(key == ' '){
+    
+    myRay.bRayActive = true;
+    myRay.initTimeRay = millis();
+  }
 }
 
 void keyReleased() {
@@ -279,7 +293,7 @@ void oscEvent(OscMessage theOscMessage) {
     if (theOscMessage.checkTypetag("ffff")) {
       float OSCvalue0 = theOscMessage.get(0).floatValue(); // X position [0..1]
       //println(" values 0: "+OSCvalue0);
-      pangBlobX = OSCvalue0;
+      
 
       float OSCvalue1 = theOscMessage.get(1).floatValue();  // Y position [0..1]
       //println(" values 1: "+OSCvalue1);
@@ -301,10 +315,12 @@ void oscEvent(OscMessage theOscMessage) {
        pangBlobY = OSCvalue1;
        */
 
-      //add to our system
-      mouseXJulian = (int)(pangBlobX*widthWindow);
-      mouseYJulian = (int)(pangBlobY*heightWindow);
-
+      //add to our system if no Manual Control is active
+      if(bManualControl == false){
+        mouseXJulian = (int)(pangBlobX*widthWindow);
+        mouseYJulian = (int)(pangBlobY*heightWindow);
+      }
+      
       return;
     }
   }
