@@ -1,14 +1,15 @@
 class Julian {
   PVector loc;
   PVector dim;
-  
+  boolean isShot, isKillingLive;
+  float initMillistColision;
+  float shotDuration;
+
 
   void update(ArrayList<Ball> ballsInput) {
     loc = new PVector(mouseXJulian, mouseYJulian - 5);
     dim = new PVector(10, heightWindow - mouseYJulian);
-
-
-
+    isShot = false;
 
     //update character dimensions
     if (heightWindow - mouseYJulian <= maxPlayerHeight && heightWindow - mouseYJulian >= minPlayerHeight) {
@@ -26,23 +27,44 @@ class Julian {
     }
 
     //calcular colision con todas las bolas recibidas aqui
+    int countCollisions = 0;
+
     for (Ball b : ballsInput) {
       Boolean collisionActual = false;
-      collisionActual = isCollidingCircleRectangle(b.location.x, b.location.y, b.radius, loc.x, loc.y, dim.x, dim.y);
 
-      if (collisionActual == true) {
-        //println("COlLISIONNNNNNN!!!!!!!");
+      if (isKillingLive == false) {
+        collisionActual = isCollidingCircleRectangle(b.location.x, b.location.y, b.radius, loc.x, loc.y, dim.x, dim.y);
+        if (collisionActual == true) {
+          countCollisions ++;
+          initMillistColision = millis();
+        }
       }
     }
-  }
+
+    //Resumen Colisions
+    if (countCollisions > 0) {
+      println("COlLISIONNNNNNN");
+      lives = lives-1;
+      isShot = true;
+      //println("isShot = "+isShot);
+      isKillingLive = true;
+    }
+
+    //update timer
+    if (millis() - initMillistColision > 1000) {
+      isKillingLive = false;
+    }
+    //println("isKillingLive = "+isKillingLive);
+  
+}
 
   void display() {
     fill(255, 0, 255);
-    
+
 
     //Paint Player
     rect(loc.x, loc.y, dim.x, dim.y);
-    
+
     //ellipse(loc.x, loc.y, 5, 5);
     //ellipse(loc.x + dim.x, loc.y, 5, 5);
   }

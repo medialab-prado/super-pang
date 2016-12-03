@@ -1,4 +1,8 @@
 //window vars //<>//
+Boolean bFullScreenActive = false;
+int widthWindowExtra = 192+30;
+int heightWindowExtra = 157 + 30;
+
 int widthWindow = 192;
 int heightWindow = 157;
 float messageScreenX = (widthWindow)/2;
@@ -18,7 +22,6 @@ PVector gravityForce = new PVector(0, accDificulty);
 PVector initVelocity = new PVector(2, 2);
 PVector initInvertVelocity = new PVector(initVelocity.x*-1, initVelocity.y);
 PVector initGravityForce = new PVector(0, -accDificulty*2);
-
 
 //Balls var interaction
 int lastShootedTime = millis();
@@ -46,6 +49,14 @@ int initTime;
 int currentTime;
 int points;
 
+//Vars for lives
+int lives;
+float livesScreenX;
+float livesScreenY;
+boolean livesText;
+
+
+
 
 ///osc
 import oscP5.*;
@@ -72,7 +83,10 @@ void initMessagesPos() {
   //Messages postions reset
   timeScreenX = (widthWindow)/2;
   timeScreenY = 15;
-  
+
+  livesScreenX = (widthWindow)/2;
+  livesScreenY = 30;
+
   pointsScreenX = timeScreenX-9;
   pointsScreenY = timeScreenY+17;
 }
@@ -80,13 +94,15 @@ void initMessagesPos() {
 void setup() {
 
   frameRate(20);
-  fullScreen(); //size(192, 157); 
+  
+  if(bFullScreenActive)fullScreen(); //
+  else size(300, 300); 
 
   //Init class vars
   myRay = new Ray();
   balls = new ArrayList<Ball>();  // Create an empty ArrayList
   miJulian = new Julian();
-  
+
   //set the right values to start a game
   resetGame();
 
@@ -96,6 +112,10 @@ void setup() {
 
   //TODO{c} Set a random background in Reset
   BackGroundImg = loadImage ("fondo.jpg");
+
+  //set number of lives
+  lives = 5;
+  livesText = true;
 }
 
 void resetGame() {
@@ -103,11 +123,15 @@ void resetGame() {
   //Game Vars
   statusGame = 0;
 
+  lives = 5;
+
   for (int i = 0; i < initialBalls; i++) {
     balls.add(new Ball());
   }
 
   initMessagesPos();
+
+  // reset number of lives
 }
 
 void draw() {
@@ -127,16 +151,22 @@ void draw() {
     drawGameOver();
   }
 
+  if (lives == 0) {
+    statusGame = 2;
+  }
+
+
   //osc
   fill(255, 0, 0);
   ellipse(pangBlobX*widthWindow, pangBlobY*heightWindow, 10, 10);
-
-
+ 
   textAlign(CENTER);
   textSize(10);
   text (""+currentTime, timeScreenX, timeScreenY);
-  if(statusGame == 2)text ("Points: "+points, pointsScreenX, pointsScreenY);
-  
+  if (statusGame == 2)text ("Points: "+points, pointsScreenX, pointsScreenY);
+  if (statusGame == 1)text("You have "+lives+" lives", livesScreenX, livesScreenY);
+
+
   translate(-40, -40);
   stroke(255);  
   drawFacadeContourInside();
@@ -231,15 +261,15 @@ void mouseMoved() {
 }
 
 void keyPressed() {
-  
-  if(key == 'm'){
+
+  if (key == 'm') {
     bManualControl = true;
   }
-  if(key == 'M'){
-     bManualControl = false;
+  if (key == 'M') {
+    bManualControl = false;
   }
-  
-  if(key == ' '){
+
+  if (key == ' ') {
     myRay.bRayActive = true;
     myRay.startShootRay();
   }
@@ -292,7 +322,7 @@ void oscEvent(OscMessage theOscMessage) {
     if (theOscMessage.checkTypetag("ffff")) {
       float OSCvalue0 = theOscMessage.get(0).floatValue(); // X position [0..1]
       //println(" values 0: "+OSCvalue0);
-      
+
 
       float OSCvalue1 = theOscMessage.get(1).floatValue();  // Y position [0..1]
       //println(" values 1: "+OSCvalue1);
@@ -315,11 +345,11 @@ void oscEvent(OscMessage theOscMessage) {
        */
 
       //add to our system if no Manual Control is active
-      if(bManualControl == false){
+      if (bManualControl == false) {
         mouseXJulian = (int)(pangBlobX*widthWindow);
         mouseYJulian = (int)(pangBlobY*heightWindow);
       }
-      
+
       return;
     }
   }
@@ -350,39 +380,39 @@ void drawFacadeContourInside()
 {
 
   //left line
-  line(40,72,40,196);
-  
+  line(40, 72, 40, 196);
+
   //bottom
-  line(40,196,231,196);
-  
+  line(40, 196, 231, 196);
+
   //right side
-  line(231,72,231,196);
-  
+  line(231, 72, 231, 196);
+
   // steps
   //flat left
-  line(40,72,76,72);
-  
+  line(40, 72, 76, 72);
+
   //vert
-  line(76,72,76,56);
-  
+  line(76, 72, 76, 56);
+
   // hor
-  line(76,56,112,56);
-  
+  line(76, 56, 112, 56);
+
   //vert
-  line(112,56,112,40);
-    
+  line(112, 56, 112, 40);
+
   //top
-  line(112,40,159,40);
-  
-   //vert right side
-  line(159,40,159,56);
-  
+  line(112, 40, 159, 40);
+
+  //vert right side
+  line(159, 40, 159, 56);
+
   //hors
-   line(160,56,195,56);
-   
+  line(160, 56, 195, 56);
+
   //  vert
-  line(195,56,195,72);
-  
+  line(195, 56, 195, 72);
+
   //hor
-  line(196,72,231,72);
+  line(196, 72, 231, 72);
 }
