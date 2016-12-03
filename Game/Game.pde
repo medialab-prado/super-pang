@@ -104,7 +104,7 @@ void setup() {
   miJulian = new Julian();
 
   //set the right values to start a game
-  resetGame();
+  resetGame(0);
 
   //setup OSC
   oscP5 = new OscP5(this, 12345);
@@ -118,13 +118,16 @@ void setup() {
   livesText = true;
 }
 
-void resetGame() {
+void resetGame(int level) {
 
   //Game Vars
-  statusGame = 0;
-
+  statusGame = level;
+  points = 0;
   lives = 5;
 
+  //reset balls
+  balls.clear();
+  //setup balls
   for (int i = 0; i < initialBalls; i++) {
     balls.add(new Ball());
   }
@@ -146,9 +149,11 @@ void draw() {
 
     if (balls.size() == 0) {
       statusGame = 2;
+    points = 0;
     }
   } else if (statusGame == 2) {
     drawGameOver();
+    
   }
 
   if (lives == 0) {
@@ -186,7 +191,7 @@ void drawReadyToPlay() {
 
   if (keyPressed == true) {
     if (key == ' ') {
-      statusGame = 1;
+        resetGame(1);
     }
   }
 }
@@ -363,14 +368,16 @@ void updateTime() {
 
 //-----------------------------------
 void updatePoints() {
-
+  //reseted points at one status before
+  
+  //Count points
   if (currentTime  > 0) {
     points = points + 3;
     currentTime--;
   } else {
     //HardCoded RESET
     if (keyPressed == true) {
-      resetGame();
+      resetGame(1);
     }
   }
 }
