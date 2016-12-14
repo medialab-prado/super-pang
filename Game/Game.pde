@@ -1,5 +1,5 @@
 //window vars //<>//
-Boolean bFullScreenActive = false;
+Boolean bFullScreenActive = true;
 int widthWindowExtra = 192+30;
 int heightWindowExtra = 157 + 30;
 
@@ -64,6 +64,8 @@ import netP5.*;
 
 OscP5 oscP5;
 NetAddress myRemoteLocation;
+float last_OSCvalue0 = -1;//Vars to detect movement from Blobs
+float last_OSCvalue1 = -1;
 
 float pangBlobX = 0;
 float pangBlobY = 0;
@@ -95,8 +97,9 @@ void setup() {
 
   frameRate(20);
   
-  if(bFullScreenActive)fullScreen(); //
-  else size(300, 300); 
+  //if(bFullScreenActive)
+  fullScreen(); //
+  //else size(300, 300); 
 
   //Init class vars
   myRay = new Ray();
@@ -327,36 +330,64 @@ void oscEvent(OscMessage theOscMessage) {
     if (theOscMessage.checkTypetag("ffff")) {
       float OSCvalue0 = theOscMessage.get(0).floatValue(); // X position [0..1]
       //println(" values 0: "+OSCvalue0);
-
+      pangBlobX = OSCvalue0;
 
       float OSCvalue1 = theOscMessage.get(1).floatValue();  // Y position [0..1]
       //println(" values 1: "+OSCvalue1);
-      pangBlobY = OSCvalue1;
-
-      float OSCvalueUp = theOscMessage.get(2).floatValue();  // UP Force position [0..1]
-      //println(" values Up: "+OSCvalueUp);
-      if (OSCvalueUp > 0.15) {
-        if (myRay.bRayActive == false) {
-          myRay.bRayActive = true;
-          myRay.initTimeRay = millis();
-          println("SHOOOT detected ! OSCUPForce = "+OSCvalue1);
-        }
-      }
-
-      /*
-      float OSCvalueDown = theOscMessage.get(3).floatValue(); // DOWN Force position [0..1]
-       println(" values 1: "+OSCvalue1);
-       pangBlobY = OSCvalue1;
-       */
+      pangBlobY = 0;//0 is on top ... Parche //OSCvalue;//
 
       //add to our system if no Manual Control is active
       if (bManualControl == false) {
         mouseXJulian = (int)(pangBlobX*widthWindow);
         mouseYJulian = (int)(pangBlobY*heightWindow);
       }
-
-      return;
     }
+  }
+  
+  else if(theOscMessage.checkAddrPattern("/GameBlob2") == true){
+    
+    if (theOscMessage.checkTypetag("ffff")) {
+      float OSCvalue0 = theOscMessage.get(0).floatValue(); // X position [0..1]
+      float OSCvalue1 = theOscMessage.get(1).floatValue();  // Y position [0..1]
+      //////////////////////////////////////////
+      //Just init this
+      Boolean bInitedOscVars = false;
+      if(last_OSCvalue0 == -1){
+        last_OSCvalue0 = OSCvalue0;
+      }else bInitedOscVars = true;
+      if(last_OSCvalue1 == -1){//Just init this
+        last_OSCvalue1 = OSCvalue1;
+      }else bInitedOscVars = true;
+ 
+      ///////////////////////////////////////
+      float diffBlob0 = abs(last_OSCvalue0 - OSCvalue0);
+      float diffBlob1 = abs(last_OSCvalue1 - OSCvalue1);
+     
+     println("received data detected ! diffBlob0 = "+diffBlob0);
+     println("received data detected ! diffBlob1 = "+diffBlob1);
+     println("bInitedOscVars = "+bInitedOscVars);
+     println("myRay.bRayActive = "+myRay.bRayActive);
+     
+     
+      if(bInitedOscVars){
+       //save last values
+       last_OSCvalue1 = OSCvalue1;
+       last_OSCvalue0 = OSCvalue0;
+      
+      //Detect If Ray action
+        if(diffBlob0 > 0.002 || diffBlob1 > 0.002){
+          if (myRay.bRayActive == false) {
+            myRay.bRayActive = true;
+            myRay.initTimeRay = millis();
+            println("SHOOOT detected ! diffBlob0 = "+diffBlob0);
+          }
+        }
+      
+      }
+      
+    }
+    
+
   }
 }
 
