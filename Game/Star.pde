@@ -1,7 +1,7 @@
 class Star {
   float factorRot = 1;
-  float radius1 = 3;
-  float radius2 = 7;
+  float radius1 = 3*1.2;
+  float radius2 = 7*1.2;
   int nCorners = 5;
 
 
@@ -9,6 +9,8 @@ class Star {
     float angle = TWO_PI / npoints;
     float halfAngle = angle/2.0;
     beginShape();
+    //fill(245,240,146);
+    noStroke();
     for (float a = 0; a < TWO_PI; a += angle) {
       float sx = x + cos(a) * radius2;
       float sy = y + sin(a) * radius2;

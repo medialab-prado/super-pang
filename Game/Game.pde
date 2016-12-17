@@ -6,7 +6,7 @@ int heightWindowExtra = 157 + 30;
 int widthWindow = 192;
 int heightWindow = 157;
 float messageScreenX = (widthWindow)/2;
-float messageScreenY = 60;
+float messageScreenY = 90;
 
 float pointsScreenX;
 float pointsScreenY;
@@ -15,7 +15,7 @@ float timeScreenY;
 
 //Vars for Starts ( vidas )
 ArrayList<Star> stars;
-int numStars = 4;
+int numStars = 5;
 
 //Vars for Balls
 ArrayList<Ball> balls;
@@ -79,8 +79,6 @@ float pangBlobY = 0;
 
 ///////////////////////
 PImage BackGroundImg;
-PImage winner;
-PImage gameOver;
 int initialBalls = 1;
 float minSizeBall = 2;
 float maxSizeBall = 4;
@@ -111,10 +109,10 @@ void setup() {
   frameRate(20);
 
   //if(bFullScreenActive)
-  //fullScreen(); //
-   size(300, 300); 
+  fullScreen(); //
+   //size(300, 300); 
    
-   textSize = 15;
+   textSize = 20;
 
   myFont = createFont("ARCADECLASSIC.TTF", textSize);
 
@@ -133,8 +131,6 @@ void setup() {
 
   //TODO{c} Set a random background in Reset
   BackGroundImg = loadImage ("fondo.jpg");
-  winner = loadImage("winner.png");
-  gameOver = loadImage("gameOver.png");
 
   //set number of lives
   lives = 5;
@@ -148,7 +144,7 @@ void resetGame(int level) {
   points = 0;
   lives = 5;
   
-  //reset balls
+  //reset lives
   stars.clear();
   //setup balls
   for (int i = 0; i < numStars; i++) {
@@ -168,12 +164,7 @@ void resetGame(int level) {
 }
 
 void draw() {
-  background(0);
-  
-  map(sin(1), -1, 1, 10, 25);
-  textSize = textSize+sin(1);
-  
- 
+  background(0); 
   
   
   
@@ -208,10 +199,10 @@ void draw() {
   textFont(myFont);
   textAlign(CENTER);
   textSize(10);
-  text (""+currentTime, timeScreenX, timeScreenY);
-  if (statusGame == 2)text ("Points: "+points, pointsScreenX, pointsScreenY);
+  //text (""+currentTime, timeScreenX, timeScreenY);
+  //if (statusGame == 2)text ("Points: "+points, pointsScreenX, pointsScreenY);
   if (statusGame == 3)text ("Points: "+points, pointsScreenX, pointsScreenY);
-  if (statusGame == 1)text("You have "+lives+" lives", livesScreenX, livesScreenY);
+  //if (statusGame == 1)text("You have "+lives+" lives", livesScreenX, livesScreenY);
 
 
   translate(-40, -40);
@@ -222,27 +213,24 @@ void draw() {
 //----------------------------------------
 void drawGameOver() {
 
-  textSize(40);
-  text("GAME is OVER", messageScreenX, messageScreenY);
-  background(200);
+  textSize(20);
+  text("GAME OVER", messageScreenX, messageScreenY);
   updatePoints();
-  imageMode(CORNER);
-  image(gameOver, 135.5-85, 118-75, 100, 100);
+  
 }
 
 //----------------------------------------
 void drawWin() {
 
-  text("You won this game! / Restart", messageScreenX, messageScreenY);
-  background(221, 222, 141);
+  text("WINNER", messageScreenX, messageScreenY);
   updatePoints();
-  imageMode(CORNER);
-  image(winner, 135.5-85, 118-85, 100, 100);
+  
 }
 
 //----------------------------------------
 void drawReadyToPlay() {
 
+  textSize = map(sin(frameRate/10), -1, 1, 15, 25);
   textSize(textSize);
   text("Shoot  to  Start", messageScreenX, messageScreenY);
 
@@ -294,12 +282,21 @@ void drawPlaying() {
   }
   
   //draw all objects
-  int heightStars = 10;
-  int xInitStars = 10;
-  float gapStars = 4;//stars.get(0).rad1*2;
+  int heightStars = 15;
+  int xInitStars = 25;
+  float gapStars = 11.5;//stars.get(0).rad1*2;
   for (int i = 0; i < numStars; i++) {
     Star myStar = stars.get(i);
-    myStar.draw(false, (int)(xInitStars+gapStars*i), heightStars, 1);
+    if(i<lives){
+      //vidas activas
+      fill(245, 240, 146);
+      myStar.draw(false, (int)(xInitStars+gapStars*i), heightStars, 1);
+    }else{
+      fill(200);
+      myStar.draw(false, (int)(xInitStars+gapStars*i), heightStars, 1);
+    }
+    
+    
   }
 
   for (Ball b : balls) {
@@ -436,7 +433,7 @@ void oscEvent(OscMessage theOscMessage) {
         //Detect If Ray action
         if (diffBlobY > 0.05) {
           if (statusGame == 0 || statusGame == 2) { //If at init Screen or Game Over
-            resetGame(1); //Restart to Scene 1
+            ready2Restart(3000);
           } else if (myRay.bRayActive == false) {
             myRay.bRayActive = true;
             myRay.startShootRay();
@@ -446,6 +443,24 @@ void oscEvent(OscMessage theOscMessage) {
       }
     }
   }
+}
+//----------------------------
+//void updateTimerReady2Start(){}
+//----------------------------
+void ready2Restart(int timer){
+  
+  resetGame(1);
+  
+ /*
+  if(bReadyInit == true){
+
+  }else {
+    
+  }
+  
+  if(millis() -  > timer)
+  bReadyInit = true;
+  */
 }
 
 //-----------------------------------
