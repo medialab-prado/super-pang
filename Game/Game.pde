@@ -13,6 +13,10 @@ float pointsScreenY;
 float timeScreenX;
 float timeScreenY;
 
+//Vars for Starts ( vidas )
+ArrayList<Star> stars;
+int numStars = 4;
+
 //Vars for Balls
 ArrayList<Ball> balls;
 float accDificulty = 0.1; // en 0.3 disminuye, con el resto sigue igual, no disminuye
@@ -55,6 +59,9 @@ float livesScreenX;
 float livesScreenY;
 boolean livesText;
 
+//Vars for text
+PFont myFont;
+float textSize;
 
 
 
@@ -80,6 +87,10 @@ float maxSizeBall = 4;
 float minRadius =  2;
 
 
+
+
+
+
 /////////////////////
 int statusGame = 0; // 0 es readyToInit, 1 Playing, 2 GameOver 3 Won
 
@@ -100,11 +111,16 @@ void setup() {
   frameRate(20);
 
   //if(bFullScreenActive)
-  fullScreen(); //
-  //else size(300, 300); 
+  //fullScreen(); //
+   size(300, 300); 
+   
+   textSize = 15;
+
+  myFont = createFont("ARCADECLASSIC.TTF", textSize);
 
   //Init class vars
   myRay = new Ray();
+  stars = new ArrayList<Star>();  // Create an empty ArrayList
   balls = new ArrayList<Ball>();  // Create an empty ArrayList
   miJulian = new Julian();
 
@@ -131,6 +147,13 @@ void resetGame(int level) {
   statusGame = level;
   points = 0;
   lives = 5;
+  
+  //reset balls
+  stars.clear();
+  //setup balls
+  for (int i = 0; i < numStars; i++) {
+    stars.add(new Star());
+  }
 
   //reset balls
   balls.clear();
@@ -146,21 +169,26 @@ void resetGame(int level) {
 
 void draw() {
   background(0);
-
+  
+  map(sin(1), -1, 1, 10, 25);
+  textSize = textSize+sin(1);
+  
+ 
+  
+  
+  
   translate(40, 40);
 
   if (statusGame == 0) {
     drawReadyToPlay();
-  }
-  else if (statusGame == 1) {
+  } else if (statusGame == 1) {
     drawPlaying();
 
     if (balls.size() == 0) {
       statusGame = 3;
       //points = 0;
     }
-  } 
-  else if (statusGame == 2) {
+  } else if (statusGame == 2) {
     drawGameOver();
   }
 
@@ -177,6 +205,7 @@ void draw() {
   fill(255, 0, 0);
   ellipse(pangBlobX*widthWindow, pangBlobY*heightWindow, 10, 10);
 
+  textFont(myFont);
   textAlign(CENTER);
   textSize(10);
   text (""+currentTime, timeScreenX, timeScreenY);
@@ -193,7 +222,8 @@ void draw() {
 //----------------------------------------
 void drawGameOver() {
 
-  text("GAME is OVER / Restart", messageScreenX, messageScreenY);
+  textSize(40);
+  text("GAME is OVER", messageScreenX, messageScreenY);
   background(200);
   updatePoints();
   imageMode(CORNER);
@@ -212,7 +242,9 @@ void drawWin() {
 
 //----------------------------------------
 void drawReadyToPlay() {
-  text("Shoot to Start", messageScreenX, messageScreenY);
+
+  textSize(textSize);
+  text("Shoot  to  Start", messageScreenX, messageScreenY);
 
   if (keyPressed == true) {
     if (key == ' ') {
@@ -259,6 +291,15 @@ void drawPlaying() {
         myRay.resetRay();
       }
     }
+  }
+  
+  //draw all objects
+  int heightStars = 10;
+  int xInitStars = 10;
+  float gapStars = 4;//stars.get(0).rad1*2;
+  for (int i = 0; i < numStars; i++) {
+    Star myStar = stars.get(i);
+    myStar.draw(false, (int)(xInitStars+gapStars*i), heightStars, 1);
   }
 
   for (Ball b : balls) {
@@ -379,7 +420,7 @@ void oscEvent(OscMessage theOscMessage) {
 
       ///////////////////////////////////////
       //float diffBlob0 = abs(last_OSCvalue0 - OSCvalue0);
-      float diffBlobY = abs(last_OSCvalue1 - OSCvalue1);
+      float diffBlobY = abs(last_OSCvalue0 - OSCvalue0);
 
       println("### /GameBlob2 received and bOscActive"+str(bOscActive));
       println("received data detected ! diffBlobY = "+diffBlobY);
