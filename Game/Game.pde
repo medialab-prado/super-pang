@@ -7,7 +7,7 @@ int widthWindow = 192;
 int heightWindow = 157;
 float messageScreenX = (widthWindow)/2;
 float messageScreenY = 90;
-
+Boolean bLevelUp = false;
 float pointsScreenX;
 float pointsScreenY;
 float timeScreenX;
@@ -110,9 +110,9 @@ void setup() {
 
   //if(bFullScreenActive)
   fullScreen(); //
-   //size(300, 300); 
-   
-   textSize = 20;
+  //size(300, 300); 
+
+  textSize = 20;
 
   myFont = createFont("ARCADECLASSIC.TTF", textSize);
 
@@ -143,7 +143,7 @@ void resetGame(int level) {
   statusGame = level;
   points = 0;
   lives = 5;
-  
+
   //reset lives
   stars.clear();
   //setup balls
@@ -154,6 +154,10 @@ void resetGame(int level) {
   //reset balls
   balls.clear();
   //setup balls
+  if (bLevelUp) {
+    initialBalls++;
+    if (initialBalls >9)initialBalls = 1;
+  } else initialBalls = 1;
   for (int i = 0; i < initialBalls; i++) {
     balls.add(new Ball());
   }
@@ -165,9 +169,9 @@ void resetGame(int level) {
 
 void draw() {
   background(0); 
-  
-  
-  
+
+
+
   translate(40, 40);
 
   if (statusGame == 0) {
@@ -194,14 +198,14 @@ void draw() {
 
   //osc
   fill(255, 0, 0);
-  ellipse(pangBlobX*widthWindow, pangBlobY*heightWindow, 10, 10);
+  ellipse(pangBlobX*widthWindow, pangBlobY*heightWindow, 1, 1);
 
   textFont(myFont);
   textAlign(CENTER);
-  textSize(10);
+  textSize(20);
   //text (""+currentTime, timeScreenX, timeScreenY);
   //if (statusGame == 2)text ("Points: "+points, pointsScreenX, pointsScreenY);
-  if (statusGame == 3)text ("Points: "+points, pointsScreenX, pointsScreenY);
+  if (statusGame == 3)text ( points, pointsScreenX+8, timeScreenY+2);
   //if (statusGame == 1)text("You have "+lives+" lives", livesScreenX, livesScreenY);
 
 
@@ -213,28 +217,34 @@ void draw() {
 //----------------------------------------
 void drawGameOver() {
 
-  textSize(20);
+  textSize(25);
   text("GAME OVER", messageScreenX, messageScreenY);
   updatePoints();
-  
+  bLevelUp = false;
 }
 
 //----------------------------------------
 void drawWin() {
 
-  text("WINNER", messageScreenX, messageScreenY);
+  drawAllStars();
+
+  float textWin = map(sin(millis()/200), -1, 1, 16, 20);
+  //println("textSize = " +str(textSize)); 
+  textSize(25);
+  fill(245, 240, 146);
+  text("WINNER!", messageScreenX+10, messageScreenY - textWin);
   updatePoints();
-  
+  bLevelUp = true;
 }
 
 //----------------------------------------
 void drawReadyToPlay() {
 
-  textSize = map(sin(millis()/200), -1, 1, 17, 20);
+  textSize = map(sin(millis()/200), -1, 1, 15, 20);
   //println("textSize = " +str(textSize)); 
   textSize(20);
   text("Salta", messageScreenX, messageScreenY - textSize);
-    text("\npara  empezar", messageScreenX, messageScreenY);
+  text("\npara  empezar", messageScreenX, messageScreenY);
 
   if (keyPressed == true) {
     if (key == ' ') {
@@ -242,7 +252,23 @@ void drawReadyToPlay() {
     }
   }
 }
-
+//----------------------------------------
+void drawAllStars() {
+  int heightStars = 15;
+  int xInitStars = 25;
+  float gapStars = 11.5;//stars.get(0).rad1*2;
+  for (int i = 0; i < numStars; i++) {
+    Star myStar = stars.get(i);
+    if (i<lives) {
+      //vidas activas
+      fill(245, 240, 146);
+      myStar.draw(false, (int)(xInitStars+gapStars*i), heightStars, 1);
+    } else {
+      fill(200);
+      myStar.draw(false, (int)(xInitStars+gapStars*i), heightStars, 1);
+    }
+  }
+}
 
 //----------------------------------------
 void drawPlaying() {
@@ -282,24 +308,9 @@ void drawPlaying() {
       }
     }
   }
-  
-  //draw all objects
-  int heightStars = 15;
-  int xInitStars = 25;
-  float gapStars = 11.5;//stars.get(0).rad1*2;
-  for (int i = 0; i < numStars; i++) {
-    Star myStar = stars.get(i);
-    if(i<lives){
-      //vidas activas
-      fill(245, 240, 146);
-      myStar.draw(false, (int)(xInitStars+gapStars*i), heightStars, 1);
-    }else{
-      fill(200);
-      myStar.draw(false, (int)(xInitStars+gapStars*i), heightStars, 1);
-    }
-    
-    
-  }
+
+  drawAllStars();
+
 
   for (Ball b : balls) {
     b.update();
@@ -449,20 +460,20 @@ void oscEvent(OscMessage theOscMessage) {
 //----------------------------
 //void updateTimerReady2Start(){}
 //----------------------------
-void ready2Restart(int timer){
-  
-  resetGame(1);
-  
- /*
-  if(bReadyInit == true){
+void ready2Restart(int timer) {
 
-  }else {
-    
-  }
-  
-  if(millis() -  > timer)
-  bReadyInit = true;
-  */
+  resetGame(1);
+
+  /*
+  if(bReadyInit == true){
+   
+   }else {
+   
+   }
+   
+   if(millis() -  > timer)
+   bReadyInit = true;
+   */
 }
 
 //-----------------------------------
