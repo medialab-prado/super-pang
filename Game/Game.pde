@@ -1,5 +1,5 @@
 //window vars //<>//
-Boolean bFullScreenActive = false;
+Boolean bFullScreenActive = true;
 int widthWindowExtra = 192+30;
 int heightWindowExtra = 157 + 30;
 
@@ -31,7 +31,7 @@ Boolean bBallsReadyCollision = false;
 //Vars for Mouse Interaction
 color colorMouseInteraction = color(255, 204, 0);
 Boolean bmousePressed = false;
-Boolean bManualControl = true;
+
 
 //Vars for Rays
 Ray myRay;
@@ -64,7 +64,9 @@ import netP5.*;
 
 OscP5 oscP5;
 NetAddress myRemoteLocation;
-
+float last_OSCvalue0 = -1;//Vars to detect movement from Blobs
+float last_OSCvalue1 = -1;
+Boolean bOscActive = true;
 float pangBlobX = 0;
 float pangBlobY = 0;
 
@@ -97,8 +99,9 @@ void setup() {
 
   frameRate(20);
 
-  if (bFullScreenActive)fullScreen(); //
-  else size(300, 300); 
+  //if(bFullScreenActive)
+  fullScreen(); //
+  //else size(300, 300); 
 
   //Init class vars
   myRay = new Ray();
@@ -148,14 +151,16 @@ void draw() {
 
   if (statusGame == 0) {
     drawReadyToPlay();
-  } else if (statusGame == 1) {
+  }
+  else if (statusGame == 1) {
     drawPlaying();
 
     if (balls.size() == 0) {
       statusGame = 3;
       //points = 0;
     }
-  } else if (statusGame == 2) {
+  } 
+  else if (statusGame == 2) {
     drawGameOver();
   }
 
@@ -177,7 +182,7 @@ void draw() {
   text (""+currentTime, timeScreenX, timeScreenY);
   if (statusGame == 2)text ("Points: "+points, pointsScreenX, pointsScreenY);
   if (statusGame == 3)text ("Points: "+points, pointsScreenX, pointsScreenY);
-  if (statusGame == 1)text("You have "+lives+" lives", livesScreenX,livesScreenY);
+  if (statusGame == 1)text("You have "+lives+" lives", livesScreenX, livesScreenY);
 
 
   translate(-40, -40);
@@ -207,7 +212,7 @@ void drawWin() {
 
 //----------------------------------------
 void drawReadyToPlay() {
-  text("Press Space or Shoot to Start", messageScreenX, messageScreenY);
+  text("Shoot to Start", messageScreenX, messageScreenY);
 
   if (keyPressed == true) {
     if (key == ' ') {
@@ -274,25 +279,21 @@ void drawPlaying() {
 }
 
 void mouseMoved() {
-
-  mouseXJulian = mouseX;
-  if (mouseXJulian > widthWindow) {
-    mouseXJulian = widthWindow;
-  }
-  mouseYJulian = mouseY;
-  if (mouseYJulian > heightWindow) {
-    mouseYJulian = heightWindow;
+  if (!bOscActive) {
+    mouseXJulian = mouseX;
+    if (mouseXJulian > widthWindow) {
+      mouseXJulian = widthWindow;
+    }
+    mouseYJulian = mouseY;
+    if (mouseYJulian > heightWindow) {
+      mouseYJulian = heightWindow;
+    }
   }
 }
 
 void keyPressed() {
 
-  if (key == 'm') {
-    bManualControl = true;
-  }
-  if (key == 'M') {
-    bManualControl = false;
-  }
+  //Set reset methods
 
   if (key == ' ') {
     myRay.bRayActive = true;
@@ -338,7 +339,7 @@ Boolean checkSmaller(float _newDim) {
 }
 void oscEvent(OscMessage theOscMessage) {
   /* print the address pattern and the typetag of the received OscMessage */
-  print("### received an osc message.");
+  println("### Yep!! Received an osc message and bOscActive " +str(bOscActive));
   //print(" addrpattern: "+theOscMessage.addrPattern());
   //println(" typetag: "+theOscMessage.typetag());
 
@@ -347,35 +348,61 @@ void oscEvent(OscMessage theOscMessage) {
     if (theOscMessage.checkTypetag("ffff")) {
       float OSCvalue0 = theOscMessage.get(0).floatValue(); // X position [0..1]
       //println(" values 0: "+OSCvalue0);
-
+      pangBlobX = OSCvalue0;
 
       float OSCvalue1 = theOscMessage.get(1).floatValue();  // Y position [0..1]
       //println(" values 1: "+OSCvalue1);
-      pangBlobY = OSCvalue1;
+      pangBlobY = OSCvalue1;//
 
-      float OSCvalueUp = theOscMessage.get(2).floatValue();  // UP Force position [0..1]
-      //println(" values Up: "+OSCvalueUp);
-      if (OSCvalueUp > 0.15) {
-        if (myRay.bRayActive == false) {
-          myRay.bRayActive = true;
-          myRay.initTimeRay = millis();
-          println("SHOOOT detected ! OSCUPForce = "+OSCvalue1);
-        }
-      }
-
-      /*
-      float OSCvalueDown = theOscMessage.get(3).floatValue(); // DOWN Force position [0..1]
-       println(" values 1: "+OSCvalue1);
-       pangBlobY = OSCvalue1;
-       */
+      println("### /GameBlob received and bOscActive"+str(bOscActive));
 
       //add to our system if no Manual Control is active
-      if (bManualControl == false) {
+      if (bOscActive == true) {
         mouseXJulian = (int)(pangBlobX*widthWindow);
         mouseYJulian = (int)(pangBlobY*heightWindow);
       }
+    }
+  } else if (theOscMessage.checkAddrPattern("/GameBlob2") == true) {
 
-      return;
+    if (theOscMessage.checkTypetag("ffff")) {
+      float OSCvalue0 = theOscMessage.get(0).floatValue(); // X position [0..1]
+      float OSCvalue1 = theOscMessage.get(1).floatValue();  // Y position [0..1]
+      //////////////////////////////////////////
+      //Just init this
+      Boolean bInitedOscVars = false;
+      if (last_OSCvalue0 == -1) {
+        last_OSCvalue0 = OSCvalue0;
+      } else bInitedOscVars = true;
+      if (last_OSCvalue1 == -1) {//Just init this
+        last_OSCvalue1 = OSCvalue1;
+      } else bInitedOscVars = true;
+
+      ///////////////////////////////////////
+      //float diffBlob0 = abs(last_OSCvalue0 - OSCvalue0);
+      float diffBlobY = abs(last_OSCvalue1 - OSCvalue1);
+
+      println("### /GameBlob2 received and bOscActive"+str(bOscActive));
+      println("received data detected ! diffBlobY = "+diffBlobY);
+      println("bInitedOscVars = "+bInitedOscVars);
+      println("myRay.bRayActive = "+myRay.bRayActive);
+
+
+      if (bInitedOscVars) {
+        //save last values
+        last_OSCvalue1 = OSCvalue1;
+        last_OSCvalue0 = OSCvalue0;
+
+        //Detect If Ray action
+        if (diffBlobY > 0.05) {
+          if (statusGame == 0 || statusGame == 2) { //If at init Screen or Game Over
+            resetGame(1); //Restart to Scene 1
+          } else if (myRay.bRayActive == false) {
+            myRay.bRayActive = true;
+            myRay.startShootRay();
+            println("SHOOOT diffBlob1 = "+diffBlobY);
+          }
+        }
+      }
     }
   }
 }

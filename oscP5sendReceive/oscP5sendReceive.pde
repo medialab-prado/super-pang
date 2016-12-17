@@ -51,8 +51,8 @@ void oscEvent(OscMessage theOscMessage) {
   println(" typetag: "+theOscMessage.typetag());
 
 
-  if(theOscMessage.checkAddrPattern("/PangBlob") == true) {
-      if(theOscMessage.checkTypetag("ff")) {
+  if(theOscMessage.checkAddrPattern("/BlobGame") == true) {
+      if(theOscMessage.checkTypetag("ffff")) {
         float OSCvalue0 = theOscMessage.get(0).floatValue();
         println(" values 0: "+OSCvalue0);
         pangBlobX = OSCvalue0;

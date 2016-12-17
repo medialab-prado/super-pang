@@ -49,12 +49,6 @@ class Ray {
 
   void update() {
 
-    if (keyPressed == true && bRayActive == false) {
-      if (key == 's') {
-        startShootRay();
-      }
-    }
-
     //Start to check collisions if ray is active
     if (bRayActive) {
 
