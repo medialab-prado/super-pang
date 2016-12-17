@@ -36,6 +36,10 @@ Boolean bBallsReadyCollision = false;
 color colorMouseInteraction = color(255, 204, 0);
 Boolean bmousePressed = false;
 
+//Vars for timer
+Boolean bTimerFinish = true;
+int initTimerScene = millis();
+Boolean bTimerRunning = false;
 
 //Vars for Rays
 Ray myRay;
@@ -49,6 +53,7 @@ float mouseYJulian;
 
 
 //Vars for Game
+int levelToJump = 1;
 int initTime;
 int currentTime;
 int points;
@@ -108,9 +113,11 @@ void setup() {
 
   frameRate(20);
 
-  //if(bFullScreenActive)
   fullScreen(); //
   //size(300, 300); 
+
+//Timer
+initTimerScene = millis();
 
   textSize = 20;
 
@@ -137,8 +144,41 @@ void setup() {
   livesText = true;
 }
 
+//-----------------------------------
+void updateResetGame() {
+
+  if (bTimerRunning) {
+    
+    float diffTime = millis() - initTimerScene;
+    if (diffTime > 6000) {
+      bTimerFinish = true;
+      bTimerRunning = false;
+    }
+
+    if (bTimerFinish && !bTimerRunning) {
+      finalReset(levelToJump);
+      bTimerFinish = false;
+    }
+  }
+  
+}
+
+//----------------------------------
 void resetGame(int level) {
 
+  if (bTimerRunning) {
+    //do nothing
+  }
+  else {
+    bTimerRunning = true;
+    initTimerScene = millis();
+    levelToJump = level;
+    println("Lets ResetGame to level"+ str(levelToJump));
+  }
+}
+
+//--------------------------------------
+void finalReset(int level) {
   //Game Vars
   statusGame = level;
   points = 0;
@@ -170,7 +210,8 @@ void resetGame(int level) {
 void draw() {
   background(0); 
 
-
+//Update Timer Scenes
+updateResetGame();
 
   translate(40, 40);
 
@@ -261,7 +302,7 @@ void drawAllStars() {
     Star myStar = stars.get(i);
     if (i<lives) {
       //vidas activas
-      fill(245, 240, 146);
+      fill(245+20, 240+20, 146+20);
       myStar.draw(false, (int)(xInitStars+gapStars*i), heightStars, 1);
     } else {
       fill(200);
