@@ -70,6 +70,8 @@ float pangBlobY = 0;
 
 ///////////////////////
 PImage BackGroundImg;
+PImage winner;
+PImage gameOver;
 int initialBalls = 1;
 float minSizeBall = 2;
 float maxSizeBall = 4;
@@ -77,7 +79,7 @@ float minRadius =  2;
 
 
 /////////////////////
-int statusGame = 0; // 0 es readyToInit, 1 Playing, 2 GameOver
+int statusGame = 0; // 0 es readyToInit, 1 Playing, 2 GameOver 3 Won
 
 void initMessagesPos() {
   //Messages postions reset
@@ -94,8 +96,8 @@ void initMessagesPos() {
 void setup() {
 
   frameRate(20);
-  
-  if(bFullScreenActive)fullScreen(); //
+
+  if (bFullScreenActive)fullScreen(); //
   else size(300, 300); 
 
   //Init class vars
@@ -112,6 +114,8 @@ void setup() {
 
   //TODO{c} Set a random background in Reset
   BackGroundImg = loadImage ("fondo.jpg");
+  winner = loadImage("winner.png");
+  gameOver = loadImage("gameOver.png");
 
   //set number of lives
   lives = 5;
@@ -148,12 +152,15 @@ void draw() {
     drawPlaying();
 
     if (balls.size() == 0) {
-      statusGame = 2;
-    points = 0;
+      statusGame = 3;
+      //points = 0;
     }
   } else if (statusGame == 2) {
     drawGameOver();
-    
+  }
+
+  if (statusGame == 3) {
+    drawWin();
   }
 
   if (lives == 0) {
@@ -164,12 +171,13 @@ void draw() {
   //osc
   fill(255, 0, 0);
   ellipse(pangBlobX*widthWindow, pangBlobY*heightWindow, 10, 10);
- 
+
   textAlign(CENTER);
   textSize(10);
   text (""+currentTime, timeScreenX, timeScreenY);
   if (statusGame == 2)text ("Points: "+points, pointsScreenX, pointsScreenY);
-  if (statusGame == 1)text("You have "+lives+" lives", livesScreenX, livesScreenY);
+  if (statusGame == 3)text ("Points: "+points, pointsScreenX, pointsScreenY);
+  if (statusGame == 1)text("You have "+lives+" lives", livesScreenX,livesScreenY);
 
 
   translate(-40, -40);
@@ -181,8 +189,20 @@ void draw() {
 void drawGameOver() {
 
   text("GAME is OVER / Restart", messageScreenX, messageScreenY);
-
+  background(200);
   updatePoints();
+  imageMode(CORNER);
+  image(gameOver, 135.5-85, 118-75, 100, 100);
+}
+
+//----------------------------------------
+void drawWin() {
+
+  text("You won this game! / Restart", messageScreenX, messageScreenY);
+  background(221, 222, 141);
+  updatePoints();
+  imageMode(CORNER);
+  image(winner, 135.5-85, 118-85, 100, 100);
 }
 
 //----------------------------------------
@@ -191,7 +211,7 @@ void drawReadyToPlay() {
 
   if (keyPressed == true) {
     if (key == ' ') {
-        resetGame(1);
+      resetGame(1);
     }
   }
 }
@@ -369,18 +389,25 @@ void updateTime() {
 //-----------------------------------
 void updatePoints() {
   //reseted points at one status before
-  
+
   //Count points
   if (currentTime  > 0) {
     points = points + 3;
     currentTime--;
-  } else {
-    //HardCoded RESET
-    if (keyPressed == true) {
-      resetGame(1);
+
+
+    if (statusGame == 2) {
+      points = 0;
+      currentTime = 0;
     }
   }
+
+  //HardCoded RESET
+  if (keyPressed == true) {
+    resetGame(1);
+  }
 }
+
 
 //-----------------------------------
 void drawFacadeContourInside()
