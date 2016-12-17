@@ -9,11 +9,11 @@ class Ball {
   float mass;
 
   Boolean b2Small = false;
-
+  Boolean bStrokeBall = true;
   Boolean destroyed = false;
 
   color colorStrokeBall = color(104, 104, 134);
-  color colorFillBall = color(104, 164, 104);
+  color colorFillBall = color(255, 0, 0, 200);
 
   int myInitMillis = millis();
   int timeSpendInitAcc = 200;
@@ -64,7 +64,7 @@ class Ball {
     if (isSmaller) {
       println("ERROR This should not be tried: Smaller please dont create a ball");
     } else {
-      println("New Ball with mass"+str(radius));
+      //println("New Ball with mass"+str(radius));
 
       location = lastLocation.copy();//{c}Fix reference issue arrayList get(ball).xxxx
 
@@ -136,6 +136,16 @@ class Ball {
   void display() {
     stroke(colorStrokeBall);
     fill(colorFillBall);
+    strokeWeight(1);
+    if (keyPressed == true) {
+      if (key == 'c') {
+        bStrokeBall = !bStrokeBall;
+      }
+    }
+    
+    if (bStrokeBall)noStroke();
+    else strokeWeight(1);
     ellipse(location.x, location.y, mass*10, mass*10);
+    strokeWeight(1);
   }
 }

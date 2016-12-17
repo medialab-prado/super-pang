@@ -43,7 +43,7 @@ class Julian {
 
     //Resumen Colisions
     if (countCollisions > 0) {
-      println("COlLISIONNNNNNN");
+      //println("COlLISIONNNNNNN");
       lives = lives-1;
       isShot = true;
       //println("isShot = "+isShot);

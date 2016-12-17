@@ -230,9 +230,11 @@ void drawWin() {
 //----------------------------------------
 void drawReadyToPlay() {
 
-  textSize = map(sin(frameRate/10), -1, 1, 15, 25);
-  textSize(textSize);
-  text("Shoot  to  Start", messageScreenX, messageScreenY);
+  textSize = map(sin(millis()/200), -1, 1, 17, 20);
+  //println("textSize = " +str(textSize)); 
+  textSize(20);
+  text("Salta", messageScreenX, messageScreenY - textSize);
+    text("\npara  empezar", messageScreenX, messageScreenY);
 
   if (keyPressed == true) {
     if (key == ' ') {
@@ -377,7 +379,7 @@ Boolean checkSmaller(float _newDim) {
 }
 void oscEvent(OscMessage theOscMessage) {
   /* print the address pattern and the typetag of the received OscMessage */
-  println("### Yep!! Received an osc message and bOscActive " +str(bOscActive));
+  //println("### Yep!! Received an osc message and bOscActive " +str(bOscActive));
   //print(" addrpattern: "+theOscMessage.addrPattern());
   //println(" typetag: "+theOscMessage.typetag());
 
@@ -392,7 +394,7 @@ void oscEvent(OscMessage theOscMessage) {
       //println(" values 1: "+OSCvalue1);
       pangBlobY = OSCvalue1;//
 
-      println("### /GameBlob received and bOscActive"+str(bOscActive));
+      //println("### /GameBlob received and bOscActive"+str(bOscActive));
 
       //add to our system if no Manual Control is active
       if (bOscActive == true) {
@@ -419,10 +421,10 @@ void oscEvent(OscMessage theOscMessage) {
       //float diffBlob0 = abs(last_OSCvalue0 - OSCvalue0);
       float diffBlobY = abs(last_OSCvalue0 - OSCvalue0);
 
-      println("### /GameBlob2 received and bOscActive"+str(bOscActive));
-      println("received data detected ! diffBlobY = "+diffBlobY);
-      println("bInitedOscVars = "+bInitedOscVars);
-      println("myRay.bRayActive = "+myRay.bRayActive);
+      //println("### /GameBlob2 received and bOscActive"+str(bOscActive));
+      //println("received data detected ! diffBlobY = "+diffBlobY);
+      //println("bInitedOscVars = "+bInitedOscVars);
+      //println("myRay.bRayActive = "+myRay.bRayActive);
 
 
       if (bInitedOscVars) {
@@ -437,7 +439,7 @@ void oscEvent(OscMessage theOscMessage) {
           } else if (myRay.bRayActive == false) {
             myRay.bRayActive = true;
             myRay.startShootRay();
-            println("SHOOOT diffBlob1 = "+diffBlobY);
+            //println("SHOOOT diffBlob1 = "+diffBlobY);
           }
         }
       }
