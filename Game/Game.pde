@@ -113,9 +113,8 @@ void setup() {
 
   frameRate(20);
 
-  fullScreen(); //
-  //size(300, 300); 
-
+  //fullScreen(); //
+  size(300, 300); 
 //Timer
 initTimerScene = millis();
 
@@ -172,6 +171,7 @@ void resetGame(int level) {
   else {
     bTimerRunning = true;
     initTimerScene = millis();
+    
     levelToJump = level;
     println("Lets ResetGame to level"+ str(levelToJump));
   }
@@ -209,6 +209,14 @@ void finalReset(int level) {
 
 void draw() {
   background(0); 
+  if (keyPressed == true) {
+    if (key == 'r') {
+      finalReset(1);
+      bTimerFinish = true;
+      bTimerRunning = false;
+      println("finalReset1");
+    }
+  }
 
 //Update Timer Scenes
 updateResetGame();
@@ -219,6 +227,7 @@ updateResetGame();
     drawReadyToPlay();
   } else if (statusGame == 1) {
     drawPlaying();
+    
 
     if (balls.size() == 0) {
       statusGame = 3;
@@ -230,6 +239,7 @@ updateResetGame();
 
   if (statusGame == 3) {
     drawWin();
+    updatePoints();
   }
 
   if (lives == 0) {
@@ -244,7 +254,7 @@ updateResetGame();
   textFont(myFont);
   textAlign(CENTER);
   textSize(20);
-  //text (""+currentTime, timeScreenX, timeScreenY);
+  if (statusGame == 1) text (""+currentTime, timeScreenX, timeScreenY);
   //if (statusGame == 2)text ("Points: "+points, pointsScreenX, pointsScreenY);
   if (statusGame == 3)text ( points, pointsScreenX+8, timeScreenY+2);
   //if (statusGame == 1)text("You have "+lives+" lives", livesScreenX, livesScreenY);
@@ -371,7 +381,7 @@ void drawPlaying() {
 }
 
 void mouseMoved() {
-  if (!bOscActive) {
+  //if (!bOscActive) {
     mouseXJulian = mouseX;
     if (mouseXJulian > widthWindow) {
       mouseXJulian = widthWindow;
@@ -380,7 +390,7 @@ void mouseMoved() {
     if (mouseYJulian > heightWindow) {
       mouseYJulian = heightWindow;
     }
-  }
+  //}
 }
 
 void keyPressed() {
@@ -449,10 +459,10 @@ void oscEvent(OscMessage theOscMessage) {
       //println("### /GameBlob received and bOscActive"+str(bOscActive));
 
       //add to our system if no Manual Control is active
-      if (bOscActive == true) {
+      //if (bOscActive == true) {
         mouseXJulian = (int)(pangBlobX*widthWindow);
         mouseYJulian = (int)(pangBlobY*heightWindow);
-      }
+      //}
     }
   } else if (theOscMessage.checkAddrPattern("/GameBlob2") == true) {
 
