@@ -451,7 +451,10 @@ void oscEvent(OscMessage theOscMessage) {
       //add to our system if no Manual Control is active
       if (bOscActive == true) {
         mouseXJulian = (int)(pangBlobX*widthWindow);
-        mouseYJulian = (int)(pangBlobY*heightWindow);
+        float reduceOSCIntMouseY = map(pangBlobY, 0 , 1, 0, 0.025);// trying to reduce Y osc value into right Y game value
+        println("reduceOSCIntMouseY = "+str(reduceOSCIntMouseY));
+        mouseYJulian = (int)(reduceOSCIntMouseY*heightWindow);
+        println("mouseYJulian = "+str(mouseYJulian));
       }
     }
   } else if (theOscMessage.checkAddrPattern("/GameBlob2") == true) {
