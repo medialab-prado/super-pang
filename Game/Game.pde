@@ -1,4 +1,4 @@
-//window vars //<>//
+//window vars //<>// //<>//
 Boolean bFullScreenActive = true;
 int widthWindowExtra = 192+30;
 int heightWindowExtra = 157 + 30;
@@ -451,7 +451,7 @@ void oscEvent(OscMessage theOscMessage) {
       //add to our system if no Manual Control is active
       if (bOscActive == true) {
         mouseXJulian = (int)(pangBlobX*widthWindow);
-        float reduceOSCIntMouseY = map(pangBlobY, 0 , 1, 0, 0.025);// trying to reduce Y osc value into right Y game value
+        float reduceOSCIntMouseY = map(pangBlobY, 0 , 1, 0, 0.25);// trying to reduce Y osc value into right Y game value
         println("reduceOSCIntMouseY = "+str(reduceOSCIntMouseY));
         mouseYJulian = (int)(reduceOSCIntMouseY*heightWindow);
         println("mouseYJulian = "+str(mouseYJulian));
