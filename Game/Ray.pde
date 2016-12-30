@@ -38,13 +38,14 @@ class Ray {
     // setear punto de inicio
   }
 
-  void startShootRay() {
+  void startShootRay(PVector _pos) {
     bRayActive = true;
     initTimeRay = millis();
 
-    rayBottom.x = mouseXJulian;
-    rayTop.x = mouseXJulian;
-    rayLocation.x = mouseXJulian;
+    rayBottom.x = _pos.x;
+    rayTop.x = _pos.x;
+    rayLocation.x = _pos.x;
+    //TODO set the Ray more higher
   }
 
   void update() {

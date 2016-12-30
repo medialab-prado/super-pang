@@ -1,31 +1,54 @@
 class Julian {
-  PVector loc;
-  PVector dim;
+  PVector loc = new PVector(0, 0);
+  PVector dim = new PVector(0, 0);
+  PVector locRaw = new PVector(0, 0);
+  PVector dimRaW = new PVector(0, 0);
   boolean isShot, isKillingLive;
   float initMillistColision;
   float shotDuration;
 
+//------------------------------------------------
+void linearInterpolate_Current2Desired(PVector currentValue, PVector targetValue){
+  float targetDistance = abs(targetValue.x-currentValue.x);
+  float factorDistanceTarget = map(targetDistance, 0, widthWindow, 0, 1);
+  currentValue.x = currentValue.x + ( targetValue.x - currentValue.x ) * factorDistanceTarget;//0.5;
+  //println("Factor Distance =" +str(factorDistanceTarget)    +"CurrentValue.x = "  +str(currentValue.x) + "targetValue.x = " + str(targetValue.x));
+  currentValue.y = targetValue.y;//Y not relevant now
+}
 
-  void update(ArrayList<Ball> ballsInput) {
-    loc = new PVector(mouseXJulian, mouseYJulian - 5);
-    dim = new PVector(10, heightWindow - mouseYJulian);
+//------------------------------------------------
+  void updatePositionAndDimensions(){
+    locRaw = new PVector(mouseXJulian, mouseYJulian - 5);
+    dimRaW = new PVector(10, heightWindow - mouseYJulian);
     isShot = false;
+    
+   linearInterpolate_Current2Desired(loc, locRaw);
+   //linearInterpolateFromTo(locRaw, loc);
+   dim = dimRaW;
 
     //update character dimensions
     if (heightWindow - mouseYJulian <= maxPlayerHeight && heightWindow - mouseYJulian >= minPlayerHeight) {
-      loc.x = mouseXJulian - 5;
+      //loc.x = mouseXJulian - 5;
       loc.y = mouseYJulian;
       dim.y = heightWindow - mouseYJulian;
     } else if (heightWindow - mouseYJulian >= maxPlayerHeight) {
-      loc.x = mouseXJulian - 5;
+      //loc.x = mouseXJulian - 5;
       loc.y = heightWindow - maxPlayerHeight;
       dim.y = maxPlayerHeight;
     } else {
-      loc.x = mouseXJulian - 5;
+      //loc.x = mouseXJulian - 5;
       loc.y =heightWindow - minPlayerHeight;
       dim.y = minPlayerHeight;
     }
 
+  }
+  
+  //------------------------------------------------
+  void update(ArrayList<Ball> ballsInput) {
+
+    //update Character Position and Dimensions
+    updatePositionAndDimensions();
+      
     //calcular colision con todas las bolas recibidas aqui
     int countCollisions = 0;
 

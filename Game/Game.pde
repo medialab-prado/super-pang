@@ -389,7 +389,7 @@ void keyPressed() {
 
   if (key == ' ') {
     myRay.bRayActive = true;
-    myRay.startShootRay();
+    myRay.startShootRay(miJulian.loc);
   }
 }
 
@@ -490,7 +490,7 @@ void oscEvent(OscMessage theOscMessage) {
             ready2Restart(3000);
           } else if (myRay.bRayActive == false) {
             myRay.bRayActive = true;
-            myRay.startShootRay();
+            myRay.startShootRay(miJulian.loc);
             //println("SHOOOT diffBlob1 = "+diffBlobY);
           }
         }
