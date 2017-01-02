@@ -125,6 +125,7 @@ void setup() {
   animatedTextY = 20;
   myFont = createFont("ARCADECLASSIC.TTF", 20);
   initMessagesPos();
+  textFont(myFont);
 
   //Init class vars
   myRay = new Ray();
@@ -213,11 +214,10 @@ void draw() {
   background(0); 
   translate(40, 40);
 
-  drawReadyToPlay();
-
   //Status Machine / Maquina de estados 
   if (statusGame == 0) {
     updateResetGame();
+    drawReadyToPlay();
   } else if (statusGame == 1) {
     drawPlaying();
 
@@ -225,10 +225,12 @@ void draw() {
       statusGame = 3;
     }
   } else if (statusGame == 2) {
+    updateResetGame();
     drawGameOver();
   }
 
   if (statusGame == 3) {
+    updateResetGame();
     drawWin();
   }
 
@@ -241,13 +243,18 @@ void draw() {
   fill(255, 0, 0);
   ellipse(pangBlobX*widthWindow, pangBlobY*heightWindow, 1, 1);
 
-  textFont(myFont);
+ 
   textAlign(CENTER);
   textSize(20);
 
-  //Draw Time while playing. Draw Points when WinnerStatus
-  if (statusGame == 3)text(points, pointsScreenX+8, timeScreenY+2);
-  if (statusGame == 2)text(currentTime, timeScreenX, timeScreenY+2);
+  //Draw at middle Top Scenario
+  //Winner case
+  if (statusGame == 3 && !bTimerRunning)text(points, pointsScreenX+8, timeScreenY+2);
+  //GameOver
+  if (statusGame == 2 && !bTimerRunning)text(currentTime, timeScreenX, timeScreenY+2);
+  //Playing Case
+  if (statusGame == 1 && !bTimerRunning)text(currentTime, timeScreenX, timeScreenY+2);
+
 
   translate(-40, -40);
   stroke(255);  
@@ -263,7 +270,8 @@ void drawGameOver() {
   updatePoints();
   bLevelUp = false;
 
-  textFont(myFont);
+  fill(255, 0, 0);
+
   textAlign(CENTER);
 
   float auxSwapingMessag = sin(millis()*0.001);
@@ -273,12 +281,13 @@ void drawGameOver() {
     text("GAME OVER", messageScreenX, messageScreenY);
   } else {
     animatedTextY = map(sin(millis()/200), -1, 1, 15, 20);
-    textSize(20);
+    textSize(25);
     text("Salta", messageScreenX, messageScreenY - animatedTextY);
     text("\npara  empezar", messageScreenX, messageScreenY);
   }
 
   textSize(20);
+  
   int leftTime2Start = (waitingTime-timer2Reset)/1000;
   text(leftTime2Start, timeScreenX, timeScreenY+2);
 }
@@ -286,31 +295,45 @@ void drawGameOver() {
 //----------------------------------------
 void drawWin() {
 
+  //if(!bTimerRunning){
   drawAllStars();
-
   float textWin = map(sin(millis()/200), -1, 1, 16, 20);
-  //println("textSize = " +str(textSize)); 
   textSize(25);
   fill(245, 240, 146);
   text("WINNER!", messageScreenX+10, messageScreenY - textWin);
   updatePoints();
   bLevelUp = true;
+  //}
+
+  if (bTimerRunning) {
+    fill(255, 0, 0);
+    textSize(20);
+    int leftTime2Start = (waitingTime-timer2Reset)/1000;
+    text(leftTime2Start, timeScreenX, timeScreenY+2);
+  }
 }
 
 //----------------------------------------
-void drawReadyToPlay() {
-  textFont(myFont);
-  textAlign(CENTER);
-
+void drawJump2Start() {
+  fill(255, 0, 0);
 
   animatedTextY = map(sin(millis()/200), -1, 1, 15, 20);
-  textSize(20);
+  textSize(25);
   text("Salta", messageScreenX, messageScreenY - animatedTextY);
   text("\npara  empezar", messageScreenX, messageScreenY);
 
   textSize(20);
   int leftTime2Start = (waitingTime-timer2Reset)/1000;
   text(leftTime2Start, timeScreenX, timeScreenY+2);
+}
+
+
+//----------------------------------------
+void drawReadyToPlay() {
+
+  textAlign(CENTER);
+
+  drawJump2Start();
 
   if (keyPressed == true) {
     if (key == ' ') {
