@@ -39,7 +39,9 @@ Boolean bmousePressed = false;
 //Vars for timer
 Boolean bTimerFinish = true;
 int initTimerScene = millis();
+int timer2Reset = 0;
 Boolean bTimerRunning = false;
+int waitingTime = 6000;
 
 //Vars for Rays
 Ray myRay;
@@ -55,7 +57,7 @@ float mouseYJulian;
 //Vars for Game
 int levelToJump = 1;
 int initTime;
-int currentTime;
+int currentTime = 180;
 int points;
 
 //Vars for lives
@@ -66,7 +68,7 @@ boolean livesText;
 
 //Vars for text
 PFont myFont;
-float textSize;
+float animatedTextY;
 
 
 
@@ -113,20 +115,22 @@ void setup() {
 
   frameRate(20);
 
-  fullScreen(); //
-  //size(300, 300); 
+  //fullScreen();
+  size(300, 300);
 
-//Timer
-initTimerScene = millis();
+  //Timer
+  initTimerScene = millis();
 
-  textSize = 20;
-
-  myFont = createFont("ARCADECLASSIC.TTF", textSize);
+  //Display Vars
+  animatedTextY = 20;
+  myFont = createFont("ARCADECLASSIC.TTF", 20);
+  initMessagesPos();
 
   //Init class vars
   myRay = new Ray();
   stars = new ArrayList<Star>();  // Create an empty ArrayList
   balls = new ArrayList<Ball>();  // Create an empty ArrayList
+
   miJulian = new Julian();
 
   //set the right values to start a game
@@ -148,9 +152,9 @@ initTimerScene = millis();
 void updateResetGame() {
 
   if (bTimerRunning) {
-    
-    float diffTime = millis() - initTimerScene;
-    if (diffTime > 6000) {
+
+    timer2Reset = millis() - initTimerScene;
+    if (timer2Reset > waitingTime) {
       bTimerFinish = true;
       bTimerRunning = false;
     }
@@ -160,7 +164,6 @@ void updateResetGame() {
       bTimerFinish = false;
     }
   }
-  
 }
 
 //----------------------------------
@@ -168,8 +171,8 @@ void resetGame(int level) {
 
   if (bTimerRunning) {
     //do nothing
-  }
-  else {
+  } else {
+    initTime = 180;
     bTimerRunning = true;
     initTimerScene = millis();
     levelToJump = level;
@@ -202,27 +205,24 @@ void finalReset(int level) {
     balls.add(new Ball());
   }
 
-  initMessagesPos();
 
   // reset number of lives
 }
 
 void draw() {
   background(0); 
-
-//Update Timer Scenes
-updateResetGame();
-
   translate(40, 40);
 
+  drawReadyToPlay();
+
+  //Status Machine / Maquina de estados 
   if (statusGame == 0) {
-    drawReadyToPlay();
+    updateResetGame();
   } else if (statusGame == 1) {
     drawPlaying();
 
     if (balls.size() == 0) {
       statusGame = 3;
-      //points = 0;
     }
   } else if (statusGame == 2) {
     drawGameOver();
@@ -244,11 +244,10 @@ updateResetGame();
   textFont(myFont);
   textAlign(CENTER);
   textSize(20);
-  //text (""+currentTime, timeScreenX, timeScreenY);
-  //if (statusGame == 2)text ("Points: "+points, pointsScreenX, pointsScreenY);
-  if (statusGame == 3)text ( points, pointsScreenX+8, timeScreenY+2);
-  //if (statusGame == 1)text("You have "+lives+" lives", livesScreenX, livesScreenY);
 
+  //Draw Time while playing. Draw Points when WinnerStatus
+  if (statusGame == 3)text(points, pointsScreenX+8, timeScreenY+2);
+  if (statusGame == 2)text(currentTime, timeScreenX, timeScreenY+2);
 
   translate(-40, -40);
   stroke(255);  
@@ -256,12 +255,32 @@ updateResetGame();
 }
 
 //----------------------------------------
-void drawGameOver() {
+void drawCreditsAndInstructions() {
+}
 
-  textSize(25);
-  text("GAME OVER", messageScreenX, messageScreenY);
+//----------------------------------------
+void drawGameOver() {
   updatePoints();
   bLevelUp = false;
+
+  textFont(myFont);
+  textAlign(CENTER);
+
+  float auxSwapingMessag = sin(millis()*0.001);
+
+  if (auxSwapingMessag > 0) {
+    textSize(25);
+    text("GAME OVER", messageScreenX, messageScreenY);
+  } else {
+    animatedTextY = map(sin(millis()/200), -1, 1, 15, 20);
+    textSize(20);
+    text("Salta", messageScreenX, messageScreenY - animatedTextY);
+    text("\npara  empezar", messageScreenX, messageScreenY);
+  }
+
+  textSize(20);
+  int leftTime2Start = (waitingTime-timer2Reset)/1000;
+  text(leftTime2Start, timeScreenX, timeScreenY+2);
 }
 
 //----------------------------------------
@@ -280,12 +299,18 @@ void drawWin() {
 
 //----------------------------------------
 void drawReadyToPlay() {
+  textFont(myFont);
+  textAlign(CENTER);
 
-  textSize = map(sin(millis()/200), -1, 1, 15, 20);
-  //println("textSize = " +str(textSize)); 
+
+  animatedTextY = map(sin(millis()/200), -1, 1, 15, 20);
   textSize(20);
-  text("Salta", messageScreenX, messageScreenY - textSize);
+  text("Salta", messageScreenX, messageScreenY - animatedTextY);
   text("\npara  empezar", messageScreenX, messageScreenY);
+
+  textSize(20);
+  int leftTime2Start = (waitingTime-timer2Reset)/1000;
+  text(leftTime2Start, timeScreenX, timeScreenY+2);
 
   if (keyPressed == true) {
     if (key == ' ') {
@@ -451,7 +476,7 @@ void oscEvent(OscMessage theOscMessage) {
       //add to our system if no Manual Control is active
       if (bOscActive == true) {
         mouseXJulian = (int)(pangBlobX*widthWindow);
-        float reduceOSCIntMouseY = map(pangBlobY, 0 , 1, 0, 1);// trying to reduce Y osc value into right Y game value
+        float reduceOSCIntMouseY = map(pangBlobY, 0, 1, 0, 1);// trying to reduce Y osc value into right Y game value
         println("reduceOSCIntMouseY = "+str(reduceOSCIntMouseY));
         mouseYJulian = (int)(reduceOSCIntMouseY*heightWindow);
         println("mouseYJulian = "+str(mouseYJulian));
@@ -522,8 +547,8 @@ void ready2Restart(int timer) {
 
 //-----------------------------------
 void updateTime() {
-  initTime = 180;
-  currentTime = initTime - (millis()/1000);
+
+  currentTime = initTime - ((millis()-initTimerScene)/1000);
 }
 
 //-----------------------------------
@@ -534,12 +559,12 @@ void updatePoints() {
   if (currentTime  > 0) {
     points = points + 3;
     currentTime--;
+  }
 
-
-    if (statusGame == 2) {
-      points = 0;
-      currentTime = 0;
-    }
+  //if game over, do not count points
+  if (statusGame == 2) {
+    points = 0;
+    currentTime = 0;
   }
 
   //HardCoded RESET
