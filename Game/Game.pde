@@ -164,7 +164,12 @@ void updateResetGame() {
       finalReset(levelToJump);
       bTimerFinish = false;
     }
+  }else{
+      bTimerFinish = true;
+      bTimerRunning = false;
   }
+  
+  //println("TimerRunning" +str(bTimerRunning));
 }
 
 //----------------------------------
@@ -214,23 +219,21 @@ void draw() {
   background(0); 
   translate(40, 40);
 
+  updateResetGame();
+  
   //Status Machine / Maquina de estados 
   if (statusGame == 0) {
-    updateResetGame();
     drawReadyToPlay();
   } else if (statusGame == 1) {
     drawPlaying();
-
     if (balls.size() == 0) {
       statusGame = 3;
     }
   } else if (statusGame == 2) {
-    updateResetGame();
     drawGameOver();
   }
 
   if (statusGame == 3) {
-    updateResetGame();
     drawWin();
   }
 
@@ -500,9 +503,9 @@ void oscEvent(OscMessage theOscMessage) {
       if (bOscActive == true) {
         mouseXJulian = (int)(pangBlobX*widthWindow);
         float reduceOSCIntMouseY = map(pangBlobY, 0, 1, 0, 1);// trying to reduce Y osc value into right Y game value
-        println("reduceOSCIntMouseY = "+str(reduceOSCIntMouseY));
+        //println("reduceOSCIntMouseY = "+str(reduceOSCIntMouseY));
         mouseYJulian = (int)(reduceOSCIntMouseY*heightWindow);
-        println("mouseYJulian = "+str(mouseYJulian));
+        //println("mouseYJulian = "+str(mouseYJulian));
       }
     }
   } else if (theOscMessage.checkAddrPattern("/GameBlob2") == true) {
@@ -537,7 +540,7 @@ void oscEvent(OscMessage theOscMessage) {
 
         //Detect If Ray action
         if (diffBlobY > 0.05) {
-          if (statusGame == 0 || statusGame == 2) { //If at init Screen or Game Over
+          if (statusGame == 0 || statusGame == 2 || statusGame == 3) { //If at init Screen or Game Over
             ready2Restart(3000);
           } else if (myRay.bRayActive == false) {
             myRay.bRayActive = true;
