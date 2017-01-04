@@ -221,6 +221,9 @@ void draw() {
 
   updateResetGame();
   
+  //Check time
+  if(currentTime <= -1)resetGame(2);
+  
   //Status Machine / Maquina de estados 
   if (statusGame == 0) {
     drawReadyToPlay();
@@ -281,10 +284,11 @@ void drawGameOver() {
 
   if (auxSwapingMessag > 0) {
     textSize(25);
-    text("GAME OVER", messageScreenX, messageScreenY);
+    text("GAME OVER", messageScreenX, messageScreenY-10);
     
     textAlign(CENTER);
-    text("CoderDojo 2016", messageScreenX, messageScreenY+50);
+    textSize(22);
+    text("CoderDojo  2016", messageScreenX, messageScreenY+35);
   } else {
       drawSaltaParaEmpezar();
   }
@@ -359,7 +363,7 @@ void drawAllStars() {
     Star myStar = stars.get(i);
     if (i<lives) {
       //vidas activas
-      fill(245+20, 240+20, 146+20);
+      fill(240, 206, 94);//casi naranja
       myStar.draw(false, (int)(xInitStars+gapStars*i), heightStars, 1);
     } else {
       fill(200);
@@ -428,7 +432,7 @@ void drawPlaying() {
 }
 
 void mouseMoved() {
-  if (!bOscActive) {
+  //if (!bOscActive) {
     mouseXJulian = mouseX;
     if (mouseXJulian > widthWindow) {
       mouseXJulian = widthWindow;
@@ -437,7 +441,7 @@ void mouseMoved() {
     if (mouseYJulian > heightWindow) {
       mouseYJulian = heightWindow;
     }
-  }
+  //}
 }
 
 void keyPressed() {
