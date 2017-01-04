@@ -1,4 +1,4 @@
-//window vars //<>// //<>//
+//window vars //<>// //<>// //<>//
 Boolean bFullScreenActive = true;
 int widthWindowExtra = 192+30;
 int heightWindowExtra = 157 + 30;
@@ -115,8 +115,8 @@ void setup() {
 
   frameRate(20);
 
-  //fullScreen();
-  size(300, 300);
+  fullScreen();
+  //size(300, 300);
 
   //Timer
   initTimerScene = millis();
@@ -287,8 +287,9 @@ void drawGameOver() {
     text("GAME OVER", messageScreenX, messageScreenY-10);
     
     textAlign(CENTER);
-    textSize(22);
-    text("CoderDojo  2016", messageScreenX, messageScreenY+35);
+    textSize(20);
+    text("MADE  IN", messageScreenX, messageScreenY+35);
+    text("CoderDojo  2016", messageScreenX, messageScreenY+50);
   } else {
       drawSaltaParaEmpezar();
   }
