@@ -282,11 +282,11 @@ void drawGameOver() {
   if (auxSwapingMessag > 0) {
     textSize(25);
     text("GAME OVER", messageScreenX, messageScreenY);
+    
+    textAlign(CENTER);
+    text("CoderDojo 2016", messageScreenX, messageScreenY+50);
   } else {
-    animatedTextY = map(sin(millis()/200), -1, 1, 15, 20);
-    textSize(25);
-    text("Salta", messageScreenX, messageScreenY - animatedTextY);
-    text("\npara  empezar", messageScreenX, messageScreenY);
+      drawSaltaParaEmpezar();
   }
 
   textSize(20);
@@ -316,14 +316,20 @@ void drawWin() {
   }
 }
 
+
+//----------------------------------------
+void drawSaltaParaEmpezar(){
+    animatedTextY = map(sin(millis()/200), -1, 1, 15, 20);
+    textSize(25);
+    text("SA LTA", messageScreenX, messageScreenY - animatedTextY);
+    text("\npara  empezar", messageScreenX, messageScreenY);
+}
+
 //----------------------------------------
 void drawJump2Start() {
   fill(255, 0, 0);
 
-  animatedTextY = map(sin(millis()/200), -1, 1, 15, 20);
-  textSize(25);
-  text("Salta", messageScreenX, messageScreenY - animatedTextY);
-  text("\npara  empezar", messageScreenX, messageScreenY);
+  drawSaltaParaEmpezar();
 
   textSize(20);
   int leftTime2Start = (waitingTime-timer2Reset)/1000;

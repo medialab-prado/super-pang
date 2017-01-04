@@ -77,7 +77,7 @@ class Ray {
     if (bRayActive) {
 
       fill(0, 0, 255);
-      ellipse(rayLocation.x, rayLocation.y, ballSize, ballSize);
+      ellipse(rayLocation.x, rayLocation.y, ballSize, ballSize*2);
       //ellipse(rayBottom.x, rayBottom.y, ballSize, ballSize);
 
       if (bRayActive == true) {
