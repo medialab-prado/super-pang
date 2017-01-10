@@ -307,23 +307,11 @@ void drawGameOver() {
       fill(255, 0, 0);
       text("GAME OVER", messageScreenX, messageScreenY-5);
 
-<<<<<<< HEAD
       textSize(20);
       fill(245, 240, 146);
       text("CoderDojo  2016", messageScreenX, messageScreenY+55);
     } else {
       fill(255, 0, 0);
-=======
-  if (auxSwapingMessag > 0) {
-    textSize(25);
-    text("GAME OVER", messageScreenX, messageScreenY-10);
-    
-    textAlign(CENTER);
-    textSize(20);
-    text("MADE  IN", messageScreenX, messageScreenY+35);
-    text("CoderDojo  2016", messageScreenX, messageScreenY+50);
-  } else {
->>>>>>> f6ec772276de58d8e78601d261bc3528a9796169
       drawSaltaParaEmpezar();
     }
   } else { 
@@ -374,11 +362,11 @@ void drawSaltaParaEmpezar() {
   textSize(20);
   textAlign(LEFT);
 
-  text("Dispara", messageScreenX-80, messageScreenY-15);
+  text("SALTA", messageScreenX-80, messageScreenY-15);
   rect(messageScreenX+30, messageScreenY-30, 20, 20);
   image(myJumpingPerson, messageScreenX+30, messageScreenY - animatedTextY*2);
 
-  text("Muevete", messageScreenX-80, messageScreenY+35);
+  text("CORRE", messageScreenX-80, messageScreenY+35);
   rect(messageScreenX+10, messageScreenY+20, 60, 20);
   image(myRunningPerson, messageScreenX +120 - animatedTextY*5, messageScreenY + 23);
 
