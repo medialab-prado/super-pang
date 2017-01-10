@@ -1,4 +1,4 @@
-//window vars //<>// //<>//
+//window vars //<>// //<>// //<>//
 Boolean bFullScreenActive = true;
 int widthWindowExtra = 192+30;
 int heightWindowExtra = 157 + 30;
@@ -8,8 +8,7 @@ int heightWindow = 157;
 float messageScreenX = (widthWindow)/2;
 float messageScreenY = 90;
 Boolean bLevelUp = false;
-float pointsScreenX;
-float pointsScreenY;
+
 float timeScreenX;
 float timeScreenY;
 
@@ -41,7 +40,9 @@ Boolean bTimerFinish = true;
 int initTimerScene = millis();
 int timer2Reset = 0;
 Boolean bTimerRunning = false;
-int waitingTime = 6000;
+int waitingTime = 10000;
+int counterTimeSpendInGameOver = 0;
+int timerAtGameOver  = millis();
 
 //Vars for Rays
 Ray myRay;
@@ -70,6 +71,9 @@ boolean livesText;
 PFont myFont;
 float animatedTextY;
 
+//Vars for instructions
+PImage myJumpingPerson;
+PImage myRunningPerson;
 
 
 ///osc
@@ -106,9 +110,6 @@ void initMessagesPos() {
 
   livesScreenX = (widthWindow)/2;
   livesScreenY = 30;
-
-  pointsScreenX = timeScreenX-9;
-  pointsScreenY = timeScreenY+17;
 }
 
 void setup() {
@@ -147,6 +148,10 @@ void setup() {
   //set number of lives
   lives = 5;
   livesText = true;
+
+  //instructions
+  myJumpingPerson = loadImage("manjumping.png");
+  myRunningPerson = loadImage("manwalking.png");
 }
 
 //-----------------------------------
@@ -164,11 +169,11 @@ void updateResetGame() {
       finalReset(levelToJump);
       bTimerFinish = false;
     }
-  }else{
-      bTimerFinish = true;
-      bTimerRunning = false;
+  } else {
+    bTimerFinish = true;
+    //bTimerRunning = false;
   }
-  
+
   //println("TimerRunning" +str(bTimerRunning));
 }
 
@@ -215,15 +220,25 @@ void finalReset(int level) {
   // reset number of lives
 }
 
+//----------------------------
+void drawTimerRunning() {
+  textSize(20);
+  if (bTimerRunning) {
+    int leftTime2Start = (waitingTime-timer2Reset)/1000;
+    text(leftTime2Start, timeScreenX, timeScreenY+2);
+  }
+}
+
+//----------------------------
 void draw() {
   background(0); 
   translate(40, 40);
 
   updateResetGame();
-  
+
   //Check time
-  if(currentTime <= -1)resetGame(2);
-  
+  if (currentTime <= -1)resetGame(2);
+
   //Status Machine / Maquina de estados 
   if (statusGame == 0) {
     drawReadyToPlay();
@@ -241,7 +256,10 @@ void draw() {
   }
 
   if (lives == 0) {
-    statusGame = 2;
+    if (statusGame == 1) {
+      statusGame = 2;
+      timerAtGameOver = millis();
+    }
   }
 
 
@@ -249,15 +267,14 @@ void draw() {
   fill(255, 0, 0);
   ellipse(pangBlobX*widthWindow, pangBlobY*heightWindow, 1, 1);
 
- 
+
   textAlign(CENTER);
   textSize(20);
+  fill(255, 0, 0);
 
   //Draw at middle Top Scenario
   //Winner case
-  if (statusGame == 3 && !bTimerRunning)text(points, pointsScreenX+8, timeScreenY+2);
-  //GameOver
-  if (statusGame == 2 && !bTimerRunning)text(currentTime, timeScreenX, timeScreenY+2);
+  if (statusGame == 3 && !bTimerRunning)text(points, timeScreenX, timeScreenY+2);
   //Playing Case
   if (statusGame == 1 && !bTimerRunning)text(currentTime, timeScreenX, timeScreenY+2);
 
@@ -273,44 +290,54 @@ void drawCreditsAndInstructions() {
 
 //----------------------------------------
 void drawGameOver() {
-  updatePoints();
-  bLevelUp = false;
-
-  fill(255, 0, 0);
-
-  textAlign(CENTER);
-
-  float auxSwapingMessag = sin(millis()*0.001);
-
-  if (auxSwapingMessag > 0) {
-    textSize(25);
-    text("GAME OVER", messageScreenX, messageScreenY-10);
-    
+  //udpates
+    bLevelUp = false;
     textAlign(CENTER);
-    textSize(22);
-    text("CoderDojo  2016", messageScreenX, messageScreenY+35);
-  } else {
+  
+  //Drawing things
+  drawTimerRunning();
+  counterTimeSpendInGameOver = millis() - timerAtGameOver;
+
+  if (counterTimeSpendInGameOver < 10000) {
+
+    float auxSwapingMessag = sin(millis()*0.001);
+
+    if (auxSwapingMessag > 0) {
+      textSize(35);
+      fill(255, 0, 0);
+      text("GAME OVER", messageScreenX, messageScreenY-5);
+
+      textSize(20);
+      fill(245, 240, 146);
+      text("CoderDojo  2016", messageScreenX, messageScreenY+55);
+    } else {
+      fill(255, 0, 0);
       drawSaltaParaEmpezar();
+    }
+  } else { 
+    //Deafault message as Instructions
+    fill(255, 0, 0);
+    drawSaltaParaEmpezar();
   }
 
-  textSize(20);
-  
-  int leftTime2Start = (waitingTime-timer2Reset)/1000;
-  text(leftTime2Start, timeScreenX, timeScreenY+2);
+  if (keyPressed == true) {
+    if (key == ' ') {
+      if (statusGame == 2)resetGame(1);
+    }
+  }
 }
 
 //----------------------------------------
 void drawWin() {
 
-  //if(!bTimerRunning){
+  updatePoints();
+
   drawAllStars();
-  float textWin = map(sin(millis()/200), -1, 1, 16, 20);
+  float textAnimWin = map(sin(millis()/200), -1, 1, 16, 20);
   textSize(25);
   fill(245, 240, 146);
-  text("WINNER!", messageScreenX+10, messageScreenY - textWin);
-  updatePoints();
+  text("WINNER!", messageScreenX+10, messageScreenY - textAnimWin);
   bLevelUp = true;
-  //}
 
   if (bTimerRunning) {
     fill(255, 0, 0);
@@ -318,21 +345,37 @@ void drawWin() {
     int leftTime2Start = (waitingTime-timer2Reset)/1000;
     text(leftTime2Start, timeScreenX, timeScreenY+2);
   }
+
+  if (keyPressed == true) {
+    if (key == ' ') {
+      if (statusGame == 3 && currentTime == 0)resetGame(1);
+    }
+  }
 }
 
 
 //----------------------------------------
-void drawSaltaParaEmpezar(){
-    animatedTextY = map(sin(millis()/200), -1, 1, 15, 20);
-    textSize(25);
-    text("SA LTA", messageScreenX, messageScreenY - animatedTextY);
-    text("\npara  empezar", messageScreenX, messageScreenY);
+void drawSaltaParaEmpezar() {
+  animatedTextY = map(sin(millis()/150), -1, 1, 15, 20);
+  noFill();
+
+  textSize(20);
+  textAlign(LEFT);
+
+  text("Dispara", messageScreenX-80, messageScreenY-15);
+  rect(messageScreenX+30, messageScreenY-30, 20, 20);
+  image(myJumpingPerson, messageScreenX+30, messageScreenY - animatedTextY*2);
+
+  text("Muevete", messageScreenX-80, messageScreenY+35);
+  rect(messageScreenX+10, messageScreenY+20, 60, 20);
+  image(myRunningPerson, messageScreenX +120 - animatedTextY*5, messageScreenY + 23);
+
+  textAlign(CENTER);
 }
 
-//----------------------------------------
+//---------------------------------------
 void drawJump2Start() {
   fill(255, 0, 0);
-
   drawSaltaParaEmpezar();
 
   textSize(20);
@@ -348,9 +391,14 @@ void drawReadyToPlay() {
 
   drawJump2Start();
 
+
   if (keyPressed == true) {
     if (key == ' ') {
-      resetGame(1);
+      if (statusGame == 0 && !bTimerRunning)resetGame(1);
+      else if (statusGame == 2)resetGame(1);
+      else if (statusGame == 3 && currentTime == 0)resetGame(1);
+      // else if(statusGame == 2 && bTimerRunning)print("No time to interact!");
+      // else resetGame(1);
     }
   }
 }
@@ -433,14 +481,14 @@ void drawPlaying() {
 
 void mouseMoved() {
   //if (!bOscActive) {
-    mouseXJulian = mouseX;
-    if (mouseXJulian > widthWindow) {
-      mouseXJulian = widthWindow;
-    }
-    mouseYJulian = mouseY;
-    if (mouseYJulian > heightWindow) {
-      mouseYJulian = heightWindow;
-    }
+  mouseXJulian = mouseX;
+  if (mouseXJulian > widthWindow) {
+    mouseXJulian = widthWindow;
+  }
+  mouseYJulian = mouseY;
+  if (mouseYJulian > heightWindow) {
+    mouseYJulian = heightWindow;
+  }
   //}
 }
 
@@ -450,7 +498,7 @@ void keyPressed() {
 
   if (key == ' ') {
     myRay.bRayActive = true;
-    myRay.startShootRay(miJulian.loc);
+    myRay.startShootRay(miJulian.loc, miJulian.dim);
   }
 }
 
@@ -550,11 +598,11 @@ void oscEvent(OscMessage theOscMessage) {
 
         //Detect If Ray action
         if (diffBlobY > 0.05) {
-          if (statusGame == 0 || statusGame == 2 || statusGame == 3) { //If at init Screen or Game Over
-            ready2Restart(3000);
+          if (statusGame == 0 || statusGame == 2 || (statusGame == 3 && currentTime == 0)) { //If at init Screen or Game Over
+            ready2Restart(7000);
           } else if (myRay.bRayActive == false) {
             myRay.bRayActive = true;
-            myRay.startShootRay(miJulian.loc);
+            myRay.startShootRay(miJulian.loc, miJulian.dim);
             //println("SHOOOT diffBlob1 = "+diffBlobY);
           }
         }
@@ -601,11 +649,6 @@ void updatePoints() {
   if (statusGame == 2) {
     points = 0;
     currentTime = 0;
-  }
-
-  //HardCoded RESET
-  if (keyPressed == true) {
-    resetGame(1);
   }
 }
 

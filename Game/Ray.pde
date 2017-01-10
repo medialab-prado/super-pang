@@ -38,13 +38,13 @@ class Ray {
     // setear punto de inicio
   }
 
-  void startShootRay(PVector _pos) {
+  void startShootRay(PVector _pos, PVector _dim) {
     bRayActive = true;
     initTimeRay = millis();
 
-    rayBottom.x = _pos.x;
-    rayTop.x = _pos.x;
-    rayLocation.x = _pos.x;
+    rayBottom.x = _pos.x + _dim.x*0.5;
+    rayTop.x = _pos.x + _dim.x*0.5;
+    rayLocation.x = _pos.x + _dim.x*0.5; //<>//
     //TODO set the Ray more higher
   }
 

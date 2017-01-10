@@ -31,17 +31,17 @@ void linearInterpolate_Current2Desired(PVector currentValue, PVector targetValue
       //loc.x = mouseXJulian - 5;
       loc.y = mouseYJulian;
       dim.y = heightWindow - mouseYJulian;
-       println("1 dim.y = "+str(dim.y));
+      //println("1 dim.y = "+str(dim.y));
     } else if (heightWindow - mouseYJulian >= maxPlayerHeight) {
       //loc.x = mouseXJulian - 5;
       loc.y = heightWindow - maxPlayerHeight;
       dim.y = maxPlayerHeight;
-      println("2 dim.y = "+str(dim.y));
+      //println("2 dim.y = "+str(dim.y));
     } else {
       //loc.x = mouseXJulian - 5;
       loc.y =heightWindow - minPlayerHeight;
       dim.y = minPlayerHeight;
-      println("else dim.y = "+str(dim.y));
+      //println("else dim.y = "+str(dim.y));
     }
 
   }
