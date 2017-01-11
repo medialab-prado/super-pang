@@ -291,9 +291,9 @@ void drawCreditsAndInstructions() {
 //----------------------------------------
 void drawGameOver() {
   //udpates
-    bLevelUp = false;
-    textAlign(CENTER);
-  
+  bLevelUp = false;
+  textAlign(CENTER);
+
   //Drawing things
   drawTimerRunning();
   counterTimeSpendInGameOver = millis() - timerAtGameOver;
@@ -358,6 +358,18 @@ void drawWin() {
 void drawSaltaParaEmpezar() {
   animatedTextY = map(sin(millis()/150), -1, 1, 15, 20);
   noFill();
+
+  float varAnimParaEmpezar = sin(millis()/700);
+  
+  textSize(20);
+  textAlign(CENTER);
+  if(varAnimParaEmpezar > 0){
+  text("Para   Jugar", messageScreenX, messageScreenY-57);
+  }
+  else{
+    text("Super   Pang", messageScreenX, messageScreenY-57);
+  }
+
 
   textSize(20);
   textAlign(LEFT);
