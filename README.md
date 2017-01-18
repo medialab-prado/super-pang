@@ -1,5 +1,5 @@
 # super-pang
-A SuperPang Game for the Medialab-Prado Facade
+A SuperPang Game for the Medialab-Prado facade
 
 ![Screenshot](https://c1.staticflickr.com/1/514/31946249750_176fabf490_c.jpg)
 
