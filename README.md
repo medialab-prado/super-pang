@@ -1,6 +1,8 @@
 # super-pang
-Super Pang Game for the MedialLab Facade
+A SuperPang Game for the Medialab-Prado Facade
 
 ![Screenshot](https://c1.staticflickr.com/1/514/31946249750_176fabf490_c.jpg)
+
+Players interacting with the game at Plaza de las Letras, Madrid.
 
 Check more pics at [Flickr "superpang"](http://bit.ly/2iC73AY)
