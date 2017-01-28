@@ -7,24 +7,24 @@ class Julian {
   float initMillistColision;
   float shotDuration;
 
-//------------------------------------------------
-void linearInterpolate_Current2Desired(PVector currentValue, PVector targetValue){
-  float targetDistance = abs(targetValue.x-currentValue.x);
-  float factorDistanceTarget = map(targetDistance, 0, widthWindow, 0, 1);
-  currentValue.x = currentValue.x + ( targetValue.x - currentValue.x ) * factorDistanceTarget;//0.5;
-  //println("Factor Distance =" +str(factorDistanceTarget)    +"CurrentValue.x = "  +str(currentValue.x) + "targetValue.x = " + str(targetValue.x));
-  currentValue.y = targetValue.y;//Y not relevant now
-}
+  //------------------------------------------------
+  void linearInterpolate_Current2Desired(PVector currentValue, PVector targetValue) {
+    float targetDistance = abs(targetValue.x-currentValue.x);
+    float factorDistanceTarget = map(targetDistance, 0, widthWindow, 0, 1);
+    currentValue.x = currentValue.x + ( targetValue.x - currentValue.x ) * factorDistanceTarget;//0.5;
+    //println("Factor Distance =" +str(factorDistanceTarget)    +"CurrentValue.x = "  +str(currentValue.x) + "targetValue.x = " + str(targetValue.x));
+    currentValue.y = targetValue.y;//Y not relevant now
+  }
 
-//------------------------------------------------
-  void updatePositionAndDimensions(){
+  //------------------------------------------------
+  void updatePositionAndDimensions() {
     locRaw = new PVector(mouseXJulian, mouseYJulian - 5);
     dimRaW = new PVector(10, heightWindow - mouseYJulian);
     isShot = false;
-    
-   linearInterpolate_Current2Desired(loc, locRaw);
-   //linearInterpolateFromTo(locRaw, loc);
-   dim = dimRaW;
+
+    linearInterpolate_Current2Desired(loc, locRaw);
+    //linearInterpolateFromTo(locRaw, loc);
+    dim = dimRaW;
 
     //update character dimensions
     if (heightWindow - mouseYJulian <= maxPlayerHeight && heightWindow - mouseYJulian >= minPlayerHeight) {
@@ -43,15 +43,14 @@ void linearInterpolate_Current2Desired(PVector currentValue, PVector targetValue
       dim.y = minPlayerHeight;
       //println("else dim.y = "+str(dim.y));
     }
-
   }
-  
+
   //------------------------------------------------
   void update(ArrayList<Ball> ballsInput) {
 
     //update Character Position and Dimensions
     updatePositionAndDimensions();
-      
+
     //calcular colision con todas las bolas recibidas aqui
     int countCollisions = 0;
 
@@ -72,6 +71,7 @@ void linearInterpolate_Current2Desired(PVector currentValue, PVector targetValue
       //println("COlLISIONNNNNNN");
       lives = lives-1;
       isShot = true;
+
       //println("isShot = "+isShot);
       isKillingLive = true;
     }
@@ -81,12 +81,12 @@ void linearInterpolate_Current2Desired(PVector currentValue, PVector targetValue
       isKillingLive = false;
     }
     //println("isKillingLive = "+isKillingLive);
-  
-}
+  }
 
   void display() {
     fill(255, 0, 255);
 
+    if (isKillingLive == true)fill(random(0, 255), random(0, 255), random(0, 255));
 
     //Paint Player
     rect(loc.x, loc.y, dim.x, dim.y);
