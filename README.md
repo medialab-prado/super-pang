@@ -5,4 +5,4 @@ A SuperPang Game for the Medialab-Prado facade
 
 Players interacting with the game at Plaza de las Letras, Madrid.
 
-Check more pics at [Flickr "superpang"](http://bit.ly/2iC73AY)
+Check more pics at [Flickr "superpang and 7Vidas"](https://www.flickr.com/photos/49049102@N07/albums/72157679177614625)
